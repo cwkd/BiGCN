@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="" />
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Initial Commit">
+      <change afterPath="$PROJECT_DIR$/Process/getPHEMEgraph.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Process/pheme9fold.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/process.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/process.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/ebola.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ebola.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/ferguson.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ferguson.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/germanwings.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/germanwings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/gurlitt.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/gurlitt.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/prince.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/prince.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/putinmissing.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/putinmissing.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.sh" beforeDir="false" afterPath="$PROJECT_DIR$/main.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,14 +53,56 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\data\PHEME" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.getPHEMEgraph">
+    <configuration name="BiGCN_Twitter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model/Twitter" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="getPHEMEgraph" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Process" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Process/getPHEMEgraph.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BiGCN" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -66,7 +126,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.getPHEMEgraph" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.BiGCN_Twitter" />
       </list>
     </recent_temporary>
   </component>
@@ -82,6 +144,14 @@
       <option name="presentableId" value="Default" />
       <updated>1646202766264</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial Commit">
+      <created>1647704651720</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1647704651720</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -94,5 +164,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
   </component>
 </project>

@@ -30,7 +30,6 @@ def loadTree(dataname):
             treeDic[eid][indexC] = {'parent': indexP, 'vec': Vec}
         print('tree no:', len(treeDic))
 
-
     return treeDic
 
 ################################# load data ###################################

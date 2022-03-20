@@ -5,10 +5,13 @@
 #Generate graph data and store in /data/Weibograph
 #python ./Process/getWeibograph.py
 #Generate graph data and store in /data/Twitter15graph
-python ./Process/getTwittergraph.py Twitter15
+#python ./Process/getTwittergraph.py Twitter15
 #Generate graph data and store in /data/Twitter16graph
 #python ./Process/getTwittergraph.py Twitter16
+#Generate graph data and store in /data/PHEMEgraph
+python ./Process/getPHEMEgraph.py PHEME
 #Reproduce the experimental results.
 #python ./model/Weibo/BiGCN_Weibo.py 100
-python ./model/Twitter/BiGCN_Twitter.py Twitter15 100
+#python ./model/Twitter/BiGCN_Twitter.py Twitter15 100
 #python ./model/Twitter/BiGCN_Twitter.py Twitter16 100
+python ./model/Twitter/BiGCN_Twitter.py PHEME 10

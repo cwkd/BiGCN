@@ -5,6 +5,7 @@ import random
 from torch.utils.data import Dataset
 from torch_geometric.data import Data
 from transformers import BertTokenizer, BertModel
+import json
 
 class GraphDataset(Dataset):
     def __init__(self, fold_x, treeDic,lower=2, upper=100000, droprate=0,
@@ -41,10 +42,14 @@ def collate_fn(data):
     return data
 
 class BiGraphDataset(Dataset):
-    def __init__(self, fold_x, treeDic,lower=2, upper=100000, tddroprate=0,budroprate=0,
-                 data_path=os.path.join('..','..', 'data', 'Weibograph')):
+    def __init__(self, fold_x, treeDic, lower=2, upper=100000, tddroprate=0, budroprate=0,
+                 data_path=os.path.join('..', '..', 'data', 'Weibograph')):
         if data_path.find('PHEME') != -1:
-            pass
+            # pheme_dir_path = os.path.join('..', '..', 'data', 'PHEME')
+            self.fold_x = fold_x
+            self.data_path = data_path
+            self.tddroprate = tddroprate
+            self.budroprate = budroprate
         else:
             self.fold_x = list(filter(lambda id: id in treeDic and len(treeDic[id]) >= lower and len(treeDic[id]) <= upper, fold_x))
             self.treeDic = treeDic
