@@ -207,6 +207,21 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
                 F2 = early_stopping.F2
                 F3 = early_stopping.F3
                 F4 = early_stopping.F4
+                # Added model snapshot saving
+                checkpoint = {
+                    'iter': iter,
+                    'epoch': epoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss': loss,
+                    'res': res
+                }
+                root_dir = os.path.dirname(os.path.abspath(__file__))
+                save_dir = os.path.join(root_dir, 'checkpoints')
+                if not os.path.exists(save_dir):
+                    os.makedirs(save_dir)
+                save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_l{loss:.5f}.pt')
+                th.save(checkpoint, save_path)
                 raise Exception
     except:
         # Added model snapshot saving
@@ -215,16 +230,14 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss,
-            'res': res
         }
         root_dir = os.path.dirname(os.path.abspath(__file__))
         save_dir = os.path.join(root_dir, 'checkpoints')
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
-        save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_l{loss:.5f}.pt')
+        save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_last.pt')
         th.save(checkpoint, save_path)
-    return train_losses , val_losses ,train_accs, val_accs,accs,F1,F2,F3,F4
+    return train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4
 
 
 if __name__ == '__main__':

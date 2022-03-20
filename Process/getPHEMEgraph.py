@@ -11,15 +11,6 @@ import json
 cwd = os.getcwd()
 
 
-class Node_tweet(object):
-    def __init__(self, idx=None):
-        self.children = []
-        self.idx = idx
-        self.word = []
-        self.index = []
-        self.parent = None
-
-
 def constructDataMatrix(tree, tokeniser, model, device):
     tweetids = list(filter(lambda x: x.isnumeric(), tree.keys()))
     id2index = {k: i for i, k in enumerate(tweetids)}
@@ -30,7 +21,6 @@ def constructDataMatrix(tree, tokeniser, model, device):
     label = tree['label']
     for idx, tweetid in enumerate(tweetids):
         # Prep
-        texts.append(tree[tweetid]['text'])
         if idx != root_index:
             parent_tweetid = tree[tweetid]['parent_tweetid']
             # print(idx, root_index, parent_tweetid, tweetid)
@@ -38,10 +28,11 @@ def constructDataMatrix(tree, tokeniser, model, device):
             try:
                 parent_idx = id2index[f'{parent_tweetid}']
             except:
-                parent_idx = -1
-                print(f'Error - Parent tweet ID not found in tree: {tree[f"{tweetid}"]}')
+                print(f'Error - Parent tweet ID not found in tree: {tweetid}')
+                continue
             row.append(parent_idx)
             col.append(child_idx)
+            texts.append(tree[tweetid]['text'])
     # Batch encode texts with BERT
     encoded_texts = tokeniser(texts,
                              padding='max_length',
@@ -54,7 +45,7 @@ def constructDataMatrix(tree, tokeniser, model, device):
     embeddings = model.embeddings(encoded_texts['input_ids'].to(device))
     root_feat = embeddings[root_index].reshape(-1, 256 * 768).cpu().detach().numpy()
     x_word = embeddings.reshape(-1, 256*768).cpu().detach().numpy()
-    return x_word, tokens, [row, col], root_feat, root_index, label
+    return x_word, tokens, [row, col], root_feat, root_index, label, tweetids
 
 
 def saveTree(tree, tokeniser, model, device):
@@ -62,11 +53,12 @@ def saveTree(tree, tokeniser, model, device):
     # tokeniser = BertTokenizer.from_pretrained('bert-base-uncased')
     # model = BertModel.from_pretrained('bert-base-uncased').to(device)
     data_matrix = constructDataMatrix(tree, tokeniser, model, device)
-    x_word, tokens, edgeindex, root_feat, root_index, label = data_matrix
+    x_word, tokens, edgeindex, root_feat, root_index, label, tweetids = data_matrix
     tokens = np.array(tokens)
     edgeindex = np.array(edgeindex)
     root_index = np.array(root_index)
     label = np.array(label)
+    tweetids = np.array(tweetids)
     try:
         np.savez(os.path.join(cwd, 'data', 'PHEMEgraph', f'{tree["root_tweetid"]}.npz'),
                  x=x_word,
@@ -74,7 +66,8 @@ def saveTree(tree, tokeniser, model, device):
                  edgeindex=edgeindex,
                  rootindex=root_index,
                  y=label,
-                 tokens=tokens)
+                 tokens=tokens,
+                 tweetids=tweetids)
     except:
         try:
             os.makedirs(os.path.join(cwd, 'data', 'PHEMEgraph'))

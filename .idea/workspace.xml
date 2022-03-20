@@ -4,24 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Initial Commit">
-      <change afterPath="$PROJECT_DIR$/Process/getPHEMEgraph.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Process/pheme9fold.py" afterDir="false" />
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Second Commit: PHEME specific additions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/process.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/ebola.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ebola.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/ferguson.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ferguson.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/germanwings.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/germanwings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/gurlitt.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/gurlitt.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/prince.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/prince.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/putinmissing.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/putinmissing.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.sh" beforeDir="false" afterPath="$PROJECT_DIR$/main.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/getPHEMEgraph.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/getPHEMEgraph.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647704651720</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Second Commit: PHEME specific additions">
+      <created>1647777575416</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1647777575417</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -167,6 +160,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+    <MESSAGE value="Second Commit: PHEME specific additions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Second Commit: PHEME specific additions" />
   </component>
 </project>
