@@ -1,4 +1,5 @@
 import sys,os
+os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 sys.path.append(os.getcwd())
 from Process.process import *
 import torch as th
@@ -23,6 +24,18 @@ class TDrumorGCN(th.nn.Module):
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
         x1=copy.copy(x.float())
+        # if x.shape[0] > 1:
+        #     print("TD")
+        #     print("x shape:", x.shape)
+        #     print("Edge_index shape:", edge_index.shape)
+        #     print("Edge_index:", edge_index)
+        #     try:
+        #         print("Maxes within edge:", th.max(edge_index, dim=1)[0])
+        #         for item in th.max(edge_index, dim=1)[0]:
+        #             if item >= x.shape[0]:
+        #                 print("VIOLATION:", item, "    VS     ", x.shape)
+        #     except IndexError:
+        #         print("no links.")
         x = self.conv1(x, edge_index)
         x2=copy.copy(x)
         rootindex = data.rootindex
@@ -55,6 +68,18 @@ class BUrumorGCN(th.nn.Module):
     def forward(self, data):
         x, edge_index = data.x, data.BU_edge_index
         x1 = copy.copy(x.float())
+        # if x.shape[0] > 1:
+        #     print("BU")
+        #     print("x shape:",x.shape)
+        #     print("Edge_index shape:",edge_index.shape)
+        #     print("Edge_index:",edge_index)
+        #     try:
+        #         print("Maxes within edge:",th.max(edge_index,dim=1)[0])
+        #         for item in th.max(edge_index,dim=1)[0]:
+        #             if item>=x.shape[0]:
+        #                 print("VIOLATION:",item, "    VS     ",x.shape)
+        #     except IndexError:
+        #         print("no links.")
         x = self.conv1(x, edge_index)
         x2 = copy.copy(x)
 
@@ -95,18 +120,19 @@ class Net(th.nn.Module):
         return x
 
 
-def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,patience,n_epochs,batchsize,dataname,iter,fold):
+def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay, patience, n_epochs,
+              batchsize, dataname, iter, fold):
     if datasetname == "PHEME":
-        model = Net(256*768,64,64).to(device)
+        model = Net(256*768, 64, 64).to(device)
     else:
-        model = Net(5000,64,64).to(device)
+        model = Net(5000, 64, 64).to(device)
 
-    BU_params=list(map(id,model.BUrumorGCN.conv1.parameters()))
+    BU_params = list(map(id, model.BUrumorGCN.conv1.parameters()))
     BU_params += list(map(id, model.BUrumorGCN.conv2.parameters()))
-    base_params=filter(lambda p:id(p) not in BU_params,model.parameters())
+    base_params = filter(lambda p: id(p) not in BU_params, model.parameters())
     optimizer = th.optim.Adam([
-        {'params':base_params},
-        {'params':model.BUrumorGCN.conv1.parameters(),'lr':lr/5},
+        {'params': base_params},
+        {'params': model.BUrumorGCN.conv1.parameters(), 'lr': lr/5},
         {'params': model.BUrumorGCN.conv2.parameters(), 'lr': lr/5}
     ], lr=lr, weight_decay=weight_decay)
     model.train()
@@ -129,11 +155,12 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
             avg_acc = []
             batch_idx = 0
             tqdm_train_loader = tqdm(train_loader)
-            for Batch_data in tqdm_train_loader:
+            for Batch_data, tweetid in tqdm_train_loader:
+                # print(Batch_data, tweetid)
                 Batch_data.to(device)
-                out_labels=model(Batch_data)
-                finalloss=F.nll_loss(out_labels, Batch_data.y)
-                loss=finalloss
+                out_labels = model(Batch_data)
+                finalloss = F.nll_loss(out_labels, Batch_data.y)
+                loss = finalloss
                 optimizer.zero_grad()
                 loss.backward()
                 avg_loss.append(loss.item())
@@ -142,9 +169,8 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
                 correct = pred.eq(Batch_data.y).sum().item()
                 train_acc = correct / len(Batch_data.y)
                 avg_acc.append(train_acc)
-                print("Iter {:03d} | Epoch {:05d} | Batch{:02d} | Train_Loss {:.4f}| Train_Accuracy {:.4f}".format(iter,epoch, batch_idx,
-                                                                                                     loss.item(),
-                                                                                                     train_acc))
+                print("Iter {:03d} | Epoch {:05d} | Batch{:02d} | Train_Loss {:.4f}| Train_Accuracy {:.4f}".format(
+                    iter, epoch, batch_idx, loss.item(), train_acc))
                 batch_idx = batch_idx + 1
 
             train_losses.append(np.mean(avg_loss))
@@ -161,7 +187,7 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
             for Batch_data in tqdm_test_loader:
                 Batch_data.to(device)
                 val_out = model(Batch_data)
-                val_loss  = F.nll_loss(val_out, Batch_data.y)
+                val_loss = F.nll_loss(val_out, Batch_data.y)
                 temp_val_losses.append(val_loss.item())
                 _, val_pred = val_out.max(dim=1)
                 correct = val_pred.eq(Batch_data.y).sum().item()
@@ -195,15 +221,15 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
 
             early_stopping(np.mean(temp_val_losses), np.mean(temp_val_accs), np.mean(temp_val_F1), np.mean(temp_val_F2),
                            np.mean(temp_val_F3), np.mean(temp_val_F4), model, 'BiGCN', dataname)
-            accs =np.mean(temp_val_accs)
+            accs = np.mean(temp_val_accs)
             F1 = np.mean(temp_val_F1)
             F2 = np.mean(temp_val_F2)
             F3 = np.mean(temp_val_F3)
             F4 = np.mean(temp_val_F4)
             if early_stopping.early_stop:
                 print("Early stopping")
-                accs=early_stopping.accs
-                F1=early_stopping.F1
+                accs = early_stopping.accs
+                F1 = early_stopping.F1
                 F2 = early_stopping.F2
                 F3 = early_stopping.F3
                 F4 = early_stopping.F4
@@ -222,8 +248,8 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
                     os.makedirs(save_dir)
                 save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_l{loss:.5f}.pt')
                 th.save(checkpoint, save_path)
-                raise Exception
-    except:
+                return train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4
+    except KeyboardInterrupt:
         # Added model snapshot saving
         checkpoint = {
             'iter': iter,
@@ -237,6 +263,14 @@ def train_GCN(treeDic, x_test, x_train,TDdroprate,BUdroprate,lr, weight_decay,pa
             os.makedirs(save_dir)
         save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_last.pt')
         th.save(checkpoint, save_path)
+    # except:
+    #     t = th.cuda.get_device_properties(0).total_memory
+    #     r = th.cuda.memory_reserved(0)
+    #     a = th.cuda.memory_allocated(0)
+    #     f = r - a  # free inside reserved
+    #     print(f'{e}\n')
+    #     print(Batch_data)
+    #     print(f'GPU Memory:\nTotal: {t}\tReserved: {r}\tAllocated: {a}\tFree: {f}\n')
     return train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4
 
 
@@ -246,14 +280,14 @@ if __name__ == '__main__':
     patience=10
     n_epochs=200
     batchsize=128
-    TDdroprate=0.2
-    BUdroprate=0.2
-    # datasetname=sys.argv[1] #"Twitter15"、"Twitter16", 'PHEME'
-    datasetname='PHEME'
-    # iterations=int(sys.argv[2])
+    TDdroprate= 0.2
+    BUdroprate= 0.2
+    datasetname=sys.argv[1] #"Twitter15"、"Twitter16", 'PHEME'
+    # datasetname='PHEME'
+    iterations=int(sys.argv[2])
     if datasetname == 'PHEME':
-        batchsize=24
-    iterations=10
+        batchsize= 24
+    # iterations=10
     model="GCN"
     device = th.device('cuda:0' if th.cuda.is_available() else 'cpu')
     test_accs = []

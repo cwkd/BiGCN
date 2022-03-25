@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Second Commit: PHEME specific additions">
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Process/getPHEMEgraph.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/getPHEMEgraph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/pheme9fold.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/pheme9fold.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/pheme_all.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,6 +30,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -38,7 +49,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../BiGCN_Shaun" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
@@ -144,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647777575417</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases.">
+      <created>1647792281865</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1647792281865</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -161,6 +179,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Second Commit: PHEME specific additions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Second Commit: PHEME specific additions" />
+    <MESSAGE value="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases." />
+    <option name="LAST_COMMIT_MESSAGE" value="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases." />
   </component>
 </project>
