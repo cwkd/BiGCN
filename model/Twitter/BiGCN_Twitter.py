@@ -184,7 +184,7 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             temp_val_Acc4, temp_val_Prec4, temp_val_Recll4, temp_val_F4 = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
             model.eval()
             tqdm_test_loader = tqdm(test_loader)
-            for Batch_data in tqdm_test_loader:
+            for Batch_data, tweetid in tqdm_test_loader:
                 Batch_data.to(device)
                 val_out = model(Batch_data)
                 val_loss = F.nll_loss(val_out, Batch_data.y)
@@ -286,7 +286,7 @@ if __name__ == '__main__':
     # datasetname='PHEME'
     iterations=int(sys.argv[2])
     if datasetname == 'PHEME':
-        batchsize= 24
+        batchsize= 1
     # iterations=10
     model="GCN"
     device = th.device('cuda:0' if th.cuda.is_available() else 'cpu')

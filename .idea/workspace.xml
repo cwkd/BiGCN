@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases.">
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Fourth Commit: Fixed dataloading errors.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/getPHEMEgraph.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/getPHEMEgraph.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Process/pheme9fold.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/pheme9fold.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/PHEME/pheme_all.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
@@ -162,7 +160,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647792281865</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fourth Commit: Fixed dataloading errors.">
+      <created>1648190627589</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1648190627589</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -180,6 +185,7 @@
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Second Commit: PHEME specific additions" />
     <MESSAGE value="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases." />
-    <option name="LAST_COMMIT_MESSAGE" value="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases." />
+    <MESSAGE value="Fourth Commit: Fixed dataloading errors." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fourth Commit: Fixed dataloading errors." />
   </component>
 </project>
