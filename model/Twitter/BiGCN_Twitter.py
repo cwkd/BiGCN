@@ -249,6 +249,35 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
                 save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_l{loss:.5f}.pt')
                 th.save(checkpoint, save_path)
                 return train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4
+            checkpoint = {
+                'iter': iter,
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': loss,
+                'res': res
+            }
+            root_dir = os.path.dirname(os.path.abspath(__file__))
+            save_dir = os.path.join(root_dir, 'checkpoints')
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+            save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_l{loss:.5f}.pt')
+            th.save(checkpoint, save_path)
+        else:
+            checkpoint = {
+                'iter': iter,
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': loss,
+                'res': res
+            }
+            root_dir = os.path.dirname(os.path.abspath(__file__))
+            save_dir = os.path.join(root_dir, 'checkpoints')
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+            save_path = os.path.join(save_dir, f'bigcn_f{fold}_i{iter}_e{epoch:05d}_l{loss:.5f}.pt')
+            th.save(checkpoint, save_path)
     except KeyboardInterrupt:
         # Added model snapshot saving
         checkpoint = {
@@ -286,7 +315,7 @@ if __name__ == '__main__':
     # datasetname='PHEME'
     iterations=int(sys.argv[2])
     if datasetname == 'PHEME':
-        batchsize= 1
+        batchsize=24
     # iterations=10
     model="GCN"
     device = th.device('cuda:0' if th.cuda.is_available() else 'cpu')
