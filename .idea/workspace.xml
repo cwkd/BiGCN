@@ -4,9 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Fourth Commit: Fixed dataloading errors. Minor bug fixes in test loop">
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Fifth Commit: Minor updates to hyperparameters">
+      <change afterPath="$PROJECT_DIR$/test_vis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/pheme9fold.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/pheme9fold.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/process.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/process.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/ebola.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ebola.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/ferguson.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ferguson.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/germanwings.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/germanwings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/gurlitt.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/gurlitt.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/prince.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/prince.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/putinmissing.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/putinmissing.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/earlystopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/earlystopping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,16 +59,24 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../BiGCN_Shaun" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/model/Twitter" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\model\Twitter" />
+      <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN" />
       <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\data\PHEME" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\model\Twitter\checkpoints\PHEME" />
+      <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\lrp_pytorch\modules" />
+      <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN" />
+      <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.getPHEMEgraph">
-    <configuration name="BiGCN_Twitter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.compare_similarity">
+    <configuration name="BERT_Twitter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BiGCN" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -62,41 +84,20 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/model/Twitter" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/Twitter/BERT_Twitter.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="getPHEMEgraph" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="BiGCN" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Process" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Process/getPHEMEgraph.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="EBGCN" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BiGCN" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -108,7 +109,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/Twitter/EBGCN.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -117,11 +118,83 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="compare_similarity" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/compare_similarity.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="explain_PHEME" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/explain_PHEME.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="graph_processing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/graph_processing.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.explain_PHEME" />
+      <item itemvalue="Python.graph_processing" />
+      <item itemvalue="Python.BERT_Twitter" />
+      <item itemvalue="Python.compare_similarity" />
+      <item itemvalue="Python.EBGCN" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.getPHEMEgraph" />
-        <item itemvalue="Python.test" />
-        <item itemvalue="Python.BiGCN_Twitter" />
+        <item itemvalue="Python.compare_similarity" />
+        <item itemvalue="Python.explain_PHEME" />
+        <item itemvalue="Python.graph_processing" />
+        <item itemvalue="Python.EBGCN" />
+        <item itemvalue="Python.BERT_Twitter" />
       </list>
     </recent_temporary>
   </component>
@@ -172,7 +245,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648448815957</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Fifth Commit: Minor updates to hyperparameters">
+      <created>1650253737785</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1650253737785</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -192,6 +272,7 @@
     <MESSAGE value="Third Commit: Tweet recursion in dataset causes downstream errors. Tweets with parents not in dataset. Added error handling for these two cases." />
     <MESSAGE value="Fourth Commit: Fixed dataloading errors." />
     <MESSAGE value="Fourth Commit: Fixed dataloading errors. Minor bug fixes in test loop" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fourth Commit: Fixed dataloading errors. Minor bug fixes in test loop" />
+    <MESSAGE value="Fifth Commit: Minor updates to hyperparameters" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fifth Commit: Minor updates to hyperparameters" />
   </component>
 </project>
