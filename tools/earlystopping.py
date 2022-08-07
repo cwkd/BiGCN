@@ -22,8 +22,9 @@ class EarlyStopping:
         self.F3 = 0
         self.F4 = 0
         self.val_loss_min = np.Inf
+        self.checkpoint = None
 
-    def __call__(self, val_loss, accs,F1,F2,F3,F4,model,modelname,str):
+    def __call__(self, val_loss, accs, F1, F2, F3, F4, model, modelname, str, checkpoint):
 
         score = -val_loss
 
@@ -34,14 +35,16 @@ class EarlyStopping:
             self.F2 = F2
             self.F3 = F3
             self.F4 = F4
-            self.save_checkpoint(val_loss, model,modelname,str)
+            # self.save_checkpoint(val_loss, model, modelname, str)
+            self.checkpoint = checkpoint
         elif score < self.best_score:
             self.counter += 1
             # print('EarlyStopping counter: {} out of {}'.format(self.counter,self.patience))
             if self.counter >= self.patience:
                 self.early_stop = True
                 print("BEST Accuracy: {:.4f}|NR F1: {:.4f}|FR F1: {:.4f}|TR F1: {:.4f}|UR F1: {:.4f}"
-                      .format(self.accs,self.F1,self.F2,self.F3,self.F4))
+                      .format(self.accs, self.F1, self.F2, self.F3, self.F4))
+                self.save_checkpoint(val_loss, model, modelname, str)
         else:
             self.best_score = score
             self.accs = accs
@@ -49,12 +52,19 @@ class EarlyStopping:
             self.F2 = F2
             self.F3 = F3
             self.F4 = F4
-            self.save_checkpoint(val_loss, model,modelname,str)
+            # self.save_checkpoint(val_loss, model, modelname, str)
+            self.checkpoint = checkpoint
             self.counter = 0
 
-    def save_checkpoint(self, val_loss, model,modelname,str):
+    def save_checkpoint(self, val_loss, model, modelname, str):
         '''Saves model when validation loss decrease.'''
         # if self.verbose:
         #     print('Validation loss decreased ({:.6f} --> {:.6f}).  Saving model ...'.format(self.val_loss_min,val_loss))
-        torch.save(model.state_dict(),modelname+str+'.m')
+        # torch.save(model.state_dict(), modelname+str+'.m')
+        fold = self.checkpoint['fold']
+        i = self.checkpoint['iter']
+        epoch = self.checkpoint['epoch']
+        loss = self.checkpoint['loss']
+        save_path = f'best_{modelname}_{str}_f{fold}_i{i}_e{epoch:05d}_l{loss:.5f}.pt'
+        torch.save(self.checkpoint, save_path)
         self.val_loss_min = val_loss

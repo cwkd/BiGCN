@@ -12,7 +12,7 @@ def load9foldData(obj):
     graph_data_dir_path = os.path.join(cwd, 'data', f'{obj}graph')
     graph_data_check = {tree_id.split('.')[0]: True for tree_id in os.listdir(graph_data_dir_path)}
     data_dir_path = os.path.join(cwd, 'data', obj)
-    event_jsons = list(filter(lambda x: x.find('.json') != -1, os.listdir(data_dir_path)))
+    event_jsons = sorted(list(filter(lambda x: x.find('.json') != -1, os.listdir(data_dir_path))))
     # print(event_jsons)
     # labelset_nonR, labelset_f, labelset_t, labelset_u = ['news', 'nonrumor'], ['false'], ['true'], ['unverified']
     print("loading tree label" )
@@ -24,6 +24,7 @@ def load9foldData(obj):
         event_jsons_copy = copy.copy(event_jsons)
         event_jsons_copy.remove(event_json)
         train_event_ids = []
+        # print(event_json, event_jsons_copy)
         for current_event in event_jsons_copy:
             event_json_path = os.path.join(data_dir_path, current_event)
             with open(event_json_path, 'r') as event:
@@ -31,7 +32,7 @@ def load9foldData(obj):
             # print(list(filter(lambda x: graph_data_check.get(x, False), tweets.keys())))
             train_event_ids += list(filter(lambda x: graph_data_check.get(x, False), tweets.keys()))
         train_folds.append(train_event_ids)
-        event_json_path = os.path.join(data_dir_path, current_event)
+        event_json_path = os.path.join(data_dir_path, event_json)
         with open(event_json_path, 'r') as event:
             tweets = json.load(event)
             # print(list(filter(lambda x: graph_data_check.get(x, False), tweets.keys())))
