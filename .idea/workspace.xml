@@ -4,23 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Fifth Commit: Minor updates to hyperparameters">
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Eighth Commit: Update to BiGCN training functions. Added EBGCN for 2nd GCN based model for comparison. Added BERT for flattened document baseline.">
+      <change afterPath="$PROJECT_DIR$/model/Twitter/LSTM_Twitter.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/test_vis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/pheme9fold.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/pheme9fold.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Process/process.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/charliehebdo.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/ebola.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ebola.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/ferguson.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ferguson.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/germanwings.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/germanwings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/gurlitt.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/gurlitt.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/ottawashooting.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/prince.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/prince.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/putinmissing.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/putinmissing.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/PHEME/sydneysiege.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/earlystopping.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/earlystopping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +239,28 @@
       <option name="project" value="LOCAL" />
       <updated>1650253737785</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Sixth Commit: Updates to event resource files">
+      <created>1659861869873</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1659861869873</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Seventh Commit: Update processing and utility functions for dataset processing and loading. Updated protocol for early stopping and saving of model checkpoints.">
+      <created>1659861954276</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1659861954276</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Eighth Commit: Update to BiGCN training functions. Added EBGCN for 2nd GCN based model for comparison. Added BERT for flattened document baseline.">
+      <created>1659862031316</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1659862031316</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -273,6 +281,9 @@
     <MESSAGE value="Fourth Commit: Fixed dataloading errors." />
     <MESSAGE value="Fourth Commit: Fixed dataloading errors. Minor bug fixes in test loop" />
     <MESSAGE value="Fifth Commit: Minor updates to hyperparameters" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fifth Commit: Minor updates to hyperparameters" />
+    <MESSAGE value="Sixth Commit: Updates to event resource files" />
+    <MESSAGE value="Seventh Commit: Update processing and utility functions for dataset processing and loading. Updated protocol for early stopping and saving of model checkpoints." />
+    <MESSAGE value="Eighth Commit: Update to BiGCN training functions. Added EBGCN for 2nd GCN based model for comparison. Added BERT for flattened document baseline." />
+    <option name="LAST_COMMIT_MESSAGE" value="Eighth Commit: Update to BiGCN training functions. Added EBGCN for 2nd GCN based model for comparison. Added BERT for flattened document baseline." />
   </component>
 </project>
