@@ -62,7 +62,7 @@ class TDrumorGCN(th.nn.Module):
             root_extend[index] = x2[rootindex[num_batch]]
         x = th.cat((x,root_extend), 1)
         # print(x.shape)
-        x= scatter_mean(x, data.batch, dim=0)
+        x = scatter_mean(x, data.batch, dim=0)
         # print(x.shape)
         return x
 
@@ -110,7 +110,7 @@ class BUrumorGCN(th.nn.Module):
             root_extend[index] = x2[rootindex[num_batch]]
         x = th.cat((x,root_extend), 1)
 
-        x= scatter_mean(x, data.batch, dim=0)
+        x = scatter_mean(x, data.batch, dim=0)
         return x
 
 
@@ -125,8 +125,8 @@ class Net(th.nn.Module):
     def forward(self, data):
         TD_x = self.TDrumorGCN(data)
         BU_x = self.BUrumorGCN(data)
-        x = th.cat((BU_x,TD_x), 1)
-        x=self.fc(x)
+        x = th.cat((BU_x, TD_x), 1)
+        x = self.fc(x)
         x = F.log_softmax(x, dim=1)
         return x
 
@@ -147,7 +147,6 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
         {'params': model.BUrumorGCN.conv1.parameters(), 'lr': lr/5},
         {'params': model.BUrumorGCN.conv2.parameters(), 'lr': lr/5}
     ], lr=lr, weight_decay=weight_decay)
-    model.train()
     train_losses = []
     val_losses = []
     train_accs = []
@@ -155,6 +154,7 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
     early_stopping = EarlyStopping(patience=patience, verbose=True)
     try:
         for epoch in range(n_epochs):
+            model.train()
             traindata_list, testdata_list = loadBiData(datasetname,
                                                        treeDic,
                                                        x_train,
@@ -330,19 +330,19 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
 
 
 if __name__ == '__main__':
-    lr=0.0005
-    weight_decay=1e-4
-    patience=10
-    n_epochs=200
-    batchsize=128
-    TDdroprate= 0.2
-    BUdroprate= 0.2
-    datasetname=sys.argv[1] #"Twitter15"、"Twitter16", 'PHEME'
-    # datasetname='PHEME'
-    iterations=int(sys.argv[2])
+    lr = 0.0005
+    weight_decay = 1e-4
+    patience = 10
+    n_epochs = 200
+    batchsize = 128
+    TDdroprate = 0.2
+    BUdroprate = 0.2
+    # datasetname=sys.argv[1] #"Twitter15"、"Twitter16", 'PHEME'
+    datasetname = 'PHEME'
+    # iterations=int(sys.argv[2])
     if datasetname == 'PHEME':
-        batchsize=24
-    # iterations=10
+        batchsize = 24
+    iterations = 1
     model = "GCN"
     device = th.device('cuda:0' if th.cuda.is_available() else 'cpu')
     test_accs = []

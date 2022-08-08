@@ -77,7 +77,8 @@ class TDrumorGCN(th.nn.Module):
             root_extend[index] = x1[rootindex[num_batch]]
         x = th.cat((x, root_extend), 1)
 
-        x = self.bn1(x)
+        if x.shape[0] != 1:
+            x = self.bn1(x)
         x = F.relu(x)
 
         x = self.conv2(x, edge_index, edge_weight=edge_pred)
@@ -170,8 +171,10 @@ class BUrumorGCN(th.nn.Module):
             root_extend[index] = x1[rootindex[num_batch]]
         x = th.cat((x,root_extend), 1)
 
-        x = self.bn1(x)
+        if x.shape[0] != 1:
+            x = self.bn1(x)
         x = F.relu(x)
+
         x = self.conv2(x, edge_index, edge_weight=edge_pred)
         x = F.relu(x)
         root_extend = th.zeros(len(data.batch), x2.size(1)).to(self.device)
@@ -263,7 +266,6 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
     #     {'params': model.BUrumorGCN.conv1.parameters(), 'lr': lr/5},
     #     {'params': model.BUrumorGCN.conv2.parameters(), 'lr': lr/5}
     # ], lr=lr, weight_decay=weight_decay)
-    model.train()
     train_losses = []
     val_losses = []
     train_accs = []
@@ -271,6 +273,7 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
     early_stopping = EarlyStopping(patience=patience, verbose=True)
     try:
         for epoch in range(n_epochs):
+            model.train()
             traindata_list, testdata_list = loadBiData(datasetname,
                                                        treeDic,
                                                        x_train,
@@ -519,19 +522,19 @@ if __name__ == '__main__':
     #     args.batchsize = 12  # explosion prevention
     #     args.iterations = 1  # just not do that iterations thing.
 
-    lr=0.0005
-    weight_decay=1e-4
-    patience=10
-    n_epochs=200
-    batchsize=128
-    TDdroprate= 0.2
-    BUdroprate= 0.2
+    lr = 0.0005
+    weight_decay = 1e-4
+    patience = 10
+    n_epochs = 200
+    batchsize = 128
+    TDdroprate = 0.2
+    BUdroprate = 0.2
     # datasetname=sys.argv[1] #"Twitter15"、"Twitter16", 'PHEME'
     datasetname = 'PHEME'
     # iterations=int(sys.argv[2])
     iterations = 1
     if datasetname == 'PHEME':
-        batchsize=24
+        batchsize = 2  # 24
     model = "GCN"
     device = th.device('cuda:0' if th.cuda.is_available() else 'cpu')
     test_accs = []
@@ -541,7 +544,7 @@ if __name__ == '__main__':
     UR_F1 = []
     args.datasetname = 'PHEME'
     args.input_features = 256 * 768
-    args.batchsize = 24
+    args.batchsize = 2  # 24
     args.iterations = 1
     # print(args.edge_infer_td, args.edge_infer_bu)
     args.device = device

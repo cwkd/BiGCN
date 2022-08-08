@@ -59,7 +59,6 @@ def train_TreeBERT(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_
     #     {'params': model.BUrumorGCN.conv2.parameters(), 'lr': lr/5}
     # ], lr=lr, weight_decay=weight_decay)
     optimizer = th.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
-    model.train()
     train_losses = []
     val_losses = []
     train_accs = []
@@ -67,6 +66,7 @@ def train_TreeBERT(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_
     early_stopping = EarlyStopping(patience=patience, verbose=True)
     try:
         for epoch in range(n_epochs):
+            model.train()
             traindata_list, testdata_list = loadBiData(dataname,
                                                        treeDic,
                                                        x_train,

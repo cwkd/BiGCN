@@ -3,6 +3,7 @@ import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 # import torch_sparse
 # from torch_scatter.utils import broadcast
 from torch_scatter import scatter_mean
@@ -457,17 +458,19 @@ if __name__ == '__main__':
                                                        BUdroprate)
             # train_loader = DataLoader(traindata_list, batch_size=batchsize, shuffle=False, num_workers=5)
             test_loader = DataLoader(testdata_list, batch_size=batchsize, shuffle=False, num_workers=5)
+            if model != 'BERT':
+                evaluation_log_path = os.path.join(EXPLAIN_DIR,
+                                                   f'{datasetname}_{event_name}_{model}_r{randomise}_eval.txt')
+            else:
+                evaluation_log_path = os.path.join(EXPLAIN_DIR,
+                                                   f'{datasetname}_{event_name}_{pooling}{model}_r{randomise}_eval.txt')
+            eval_log_string = ''
+            conf_mat = np.zeros((4, 4))
             for sample_num, (data_sample, root_tweetid) in enumerate(tqdm(test_loader)):
                 explain_output = {}
                 # print(type(data_sample['edge_index']), isinstance(data_sample['edge_index'], torch_sparse.SparseTensor))
                 data_sample.retains_grad = True
                 data_sample = data_sample.to(device)
-
-                # print(edge_index.shape)
-                # output = net(data_sample)
-                # logits = torch.nn.Softmax()(output)
-                # target = data_sample.y
-                # pred = torch.argmax(output)
 
                 x = data_sample.x
                 if randomise == 1.0:
@@ -482,7 +485,7 @@ if __name__ == '__main__':
                     # print(indices[:int(sample_len/2)], indices[int(sample_len/2):])
                     x = swap_elements(x, indices[:int(sample_len/2)], indices[int(sample_len/2):])
                     explain_output['swapped_nodes'] = [indices[:int(sample_len/2)], indices[int(sample_len/2):]]
-
+                data_sample.x = x
                 edge_index = data_sample.edge_index
                 BU_edge_index = data_sample.BU_edge_index
                 tweetids = data_sample.tweetids
@@ -519,6 +522,14 @@ if __name__ == '__main__':
                     bu_gcn_explanations = extract_intermediates_bigcn(bu_gcn_conv1, bu_gcn_conv2, x,
                                                                       BU_edge_index, data_sample, device)
                     explain_output['bu_gcn_explanations'] = bu_gcn_explanations
+                    out_labels = net(data_sample)
+                    # _, pred = out_labels.max(dim=-1)
+                    # correct = pred.eq(data_sample.y).sum().item()
+                    # print(pred.item(), data_sample.y.item(), correct)
+                    # explain_output['prediction'] = pred.item()
+                    # explain_output['ground_truth'] = data_sample.y.item()
+                    # explain_output['correct_prediction'] = correct
+                    # raise Exception
                 elif model == 'EBGCN':
                     # TD
                     td_gcn_explanations = extract_intermediates_ebgcn(net.TDrumorGCN, x, edge_index, data_sample, device)
@@ -526,6 +537,14 @@ if __name__ == '__main__':
                     #BU
                     bu_gcn_explanations = extract_intermediates_ebgcn(net.BUrumorGCN, x, BU_edge_index, data_sample, device)
                     explain_output['bu_gcn_explanations'] = bu_gcn_explanations
+                    out_labels, _, _ = net(data_sample)
+                    # _, pred = out_labels.max(dim=-1)
+                    # correct = pred.eq(data_sample.y).sum().item()
+                    # print(pred.item(), data_sample.y.item(), correct)
+                    # explain_output['prediction'] = pred.item()
+                    # explain_output['ground_truth'] = data_sample.y.item()
+                    # explain_output['correct_prediction'] = correct
+                    # raise Exception
                 elif model == 'BERT':
                     x = x.reshape(x.shape[0], -1, 768)
                     if pooling == 'max':
@@ -539,7 +558,15 @@ if __name__ == '__main__':
                                                             k=bert_last_hidden_sum.shape[0])
                     explain_output['bert_last_hidden_sum_top_k'] = [bert_last_hidden_sum_top_k.indices.tolist(),
                                                                     bert_last_hidden_sum_top_k.values.tolist()]
-                    # raise Exception
+                    out_labels = net(x)
+                _, pred = out_labels.max(dim=-1)
+                correct = pred.eq(data_sample.y).sum().item()
+                # print(pred.item(), data_sample.y.item(), correct)
+                explain_output['prediction'] = pred.item()
+                explain_output['ground_truth'] = data_sample.y.item()
+                explain_output['correct_prediction'] = correct
+                eval_log_string += f'{root_tweetid[0]}: pred: {pred.item()} gt: {data_sample.y.item()}\n'
+                conf_mat[data_sample.y.item(), pred.item()] += 1
 
                 # TODO: Finish this
                 # extract_gcn_conv(td_gcn_conv1, x, edge_index)
@@ -577,6 +604,29 @@ if __name__ == '__main__':
                 #     break
                 # print(f'Success: {root_tweetid[0]}\n')
             outputs.append(fold_output)
+            total_evaluated = conf_mat.sum()
+            total_correct = conf_mat.diagonal().sum()
+            acc = total_correct/total_evaluated
+            eval_log_string += f'Acc: {acc*100:.5f}% [{total_correct}]/[{total_evaluated}]\n'
+            for i in range(4):
+                precision = conf_mat[i, i] / conf_mat[:, i].sum()
+                recall = conf_mat[i, i] / conf_mat[i, :].sum()
+                f1 = 2 * precision * recall / (precision + recall)
+                eval_log_string += f'Class {i}:\t' \
+                                   f'Precision: {precision}\t' \
+                                   f'Recall: {recall}\t' \
+                                   f'F1: {f1}\n'
+            eval_log_string += f' {"":20} | {"":20} | {"Predicted":20}\n' \
+                               f' {"":20} | {"":20} | {"Class 0":20} | {"Class 1":20} | {"Class 2":20} | {"Class 3":20}\n'
+            for i in range(4):
+                if i != 0:
+                    eval_log_string += f' {"":20} | {f"Class {i}":20} |'
+                else:
+                    eval_log_string += f' {"Actual":20} | {f"Class {i}":20} |'
+                eval_log_string += f' {conf_mat[i, 0]:20} | {conf_mat[i, 1]:20} |' \
+                                   f' {conf_mat[i, 2]:20} | {conf_mat[i, 3]:20}\n'
+            with open(evaluation_log_path, 'w') as f:
+                f.write(eval_log_string)
             # break
     # with open('explain_outputs.json', 'w') as f:
     #     json.dump(outputs, f, indent=1)
