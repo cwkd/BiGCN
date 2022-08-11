@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Ninth Commit: Added scripts for generating explanations, comparing to pre-computed centrality metrics for each data sample.">
-      <change afterPath="$PROJECT_DIR$/model/Twitter/LSTM_Twitter.py" afterDir="false" />
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Eleventh Commit: Added LSTM as additional baseline.">
       <change afterPath="$PROJECT_DIR$/test_vis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/explain_PHEME.py" beforeDir="false" afterPath="$PROJECT_DIR$/explain_PHEME.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Twitter/BERT_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BERT_Twitter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/EBGCN.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/EBGCN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Twitter/LSTM_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/LSTM_Twitter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,11 +64,35 @@
       <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.EBGCN">
+  <component name="RunManager" selected="Python.BiGCN_Twitter">
+    <configuration name="BiGCN_Twitter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="EBGCN" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BiGCN" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -148,41 +170,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="graph_processing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="BiGCN" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/graph_processing.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.explain_PHEME" />
-      <item itemvalue="Python.graph_processing" />
       <item itemvalue="Python.compare_similarity" />
       <item itemvalue="Python.EBGCN" />
       <item itemvalue="Python.LSTM_Twitter" />
+      <item itemvalue="Python.BiGCN_Twitter" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.BiGCN_Twitter" />
         <item itemvalue="Python.EBGCN" />
         <item itemvalue="Python.explain_PHEME" />
         <item itemvalue="Python.LSTM_Twitter" />
         <item itemvalue="Python.compare_similarity" />
-        <item itemvalue="Python.graph_processing" />
       </list>
     </recent_temporary>
   </component>
@@ -268,7 +269,21 @@
       <option name="project" value="LOCAL" />
       <updated>1659878450355</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Tenth Commit: Fixed faulty model.train() placement in earlier versions of model files. Added exception handling for EBGCN batchnorm1d when batch size is 1. Added prediction and confusion matrix logging for explanation generating script.">
+      <created>1659945771695</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1659945771695</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Eleventh Commit: Added LSTM as additional baseline.">
+      <created>1659946008186</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1659946008186</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -293,6 +308,8 @@
     <MESSAGE value="Seventh Commit: Update processing and utility functions for dataset processing and loading. Updated protocol for early stopping and saving of model checkpoints." />
     <MESSAGE value="Eighth Commit: Update to BiGCN training functions. Added EBGCN for 2nd GCN based model for comparison. Added BERT for flattened document baseline." />
     <MESSAGE value="Ninth Commit: Added scripts for generating explanations, comparing to pre-computed centrality metrics for each data sample." />
-    <option name="LAST_COMMIT_MESSAGE" value="Ninth Commit: Added scripts for generating explanations, comparing to pre-computed centrality metrics for each data sample." />
+    <MESSAGE value="Tenth Commit: Fixed faulty model.train() placement in earlier versions of model files. Added exception handling for EBGCN batchnorm1d when batch size is 1. Added prediction and confusion matrix logging for explanation generating script." />
+    <MESSAGE value="Eleventh Commit: Added LSTM as additional baseline." />
+    <option name="LAST_COMMIT_MESSAGE" value="Eleventh Commit: Added LSTM as additional baseline." />
   </component>
 </project>
