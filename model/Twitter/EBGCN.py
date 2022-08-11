@@ -233,8 +233,9 @@ class EBGCN(th.nn.Module):
 def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay, patience, n_epochs,
               batchsize, datasetname, iter, fold, device, args, **kwargs):
 
+    version = kwargs.get('version', 2)
     log_file_path = kwargs['log_file_path']
-
+    args.input_features = 768
     if datasetname == "PHEME":
         # model = EBGCN(256 * 768, 64, 64).to(device)
         model = EBGCN(args).to(device)
@@ -289,6 +290,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             for Batch_data, tweetid in tqdm_train_loader:
                 # print(Batch_data, tweetid)
                 Batch_data.to(device)
+                if version == 2:  # Version 2
+                    new_x = Batch_data.x
+                    new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                    new_x = new_x[:, 0]
+                    Batch_data.x = new_x
                 # print(model.TDrumorGCN.conv1.lin(Batch_data.x).shape)
                 out_labels, TD_edge_loss, BU_edge_loss = model(Batch_data)
                 finalloss = F.nll_loss(out_labels, Batch_data.y)
@@ -322,6 +328,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             tqdm_test_loader = tqdm(test_loader)
             for Batch_data, tweetid in tqdm_test_loader:
                 Batch_data.to(device)
+                if version == 2:  # Version 2
+                    new_x = Batch_data.x
+                    new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                    new_x = new_x[:, 0]
+                    Batch_data.x = new_x
                 val_out, _, _ = model(Batch_data)
                 val_loss = F.nll_loss(val_out, Batch_data.y)
                 temp_val_losses.append(val_loss.item())
@@ -372,7 +383,7 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             F2 = np.mean(temp_val_F2)
             F3 = np.mean(temp_val_F3)
             F4 = np.mean(temp_val_F4)
-            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, 'EBGCN', datasetname,
+            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, f'EBGCNv{version}', datasetname,
                            checkpoint=checkpoint)
 
             if early_stopping.early_stop:
@@ -534,7 +545,7 @@ if __name__ == '__main__':
     # iterations=int(sys.argv[2])
     iterations = 1
     if datasetname == 'PHEME':
-        batchsize = 2  # 24
+        batchsize = 24  # 24
     model = "GCN"
     device = th.device('cuda:0' if th.cuda.is_available() else 'cpu')
     test_accs = []
@@ -544,7 +555,7 @@ if __name__ == '__main__':
     UR_F1 = []
     args.datasetname = 'PHEME'
     args.input_features = 256 * 768
-    args.batchsize = 2  # 24
+    args.batchsize = 24  # 24
     args.iterations = 1
     # print(args.edge_infer_td, args.edge_infer_bu)
     args.device = device

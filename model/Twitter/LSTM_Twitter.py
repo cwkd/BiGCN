@@ -297,8 +297,8 @@ if __name__ == '__main__':
     TR_F1 = []
     UR_F1 = []
     debug = [None]
-    pooling = 'max'
-    log_file_path = f'{pooling}{model}_log.txt'
+    # pooling = 'max'
+    log_file_path = f'{model}_log.txt'
     for iter in range(iterations):
         if datasetname != 'PHEME':
             fold0_x_test, fold0_x_train, \
@@ -392,7 +392,7 @@ if __name__ == '__main__':
                                     datasetname,
                                     iter,
                                     fold=fold_num,
-                                    device=device, debug=debug, pooling=pooling, log_file_path=log_file_path)
+                                    device=device, debug=debug, log_file_path=log_file_path)
                 train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4 = output
                 train_losses_dict[f'train_losses_{fold_num}'] = train_losses
                 val_losses_dict[f'val_losses_{fold_num}'] = val_losses
