@@ -112,10 +112,11 @@ def constructDataMatrix(tree, tokeniser, model, device, verbose=False):
             for text in texts:
                 tokens.append(tokeniser.tokenize(text))
             embeddings = model.embeddings(encoded_texts['input_ids'].to(device))
+            cls = model(encoded_texts['input_ids'].to(device)).pooler_output.cpu().detach().numpy()
             root_feat = embeddings[root_index].reshape(-1, 256 * 768).cpu().detach().numpy()
             # x_word = torch.cat([embeddings[:root_index], embeddings[root_index+1:]], dim=0).reshape(-1, 256*768).cpu().detach().numpy()
-            x_word = embeddings.reshape(-1, 256*768).cpu().detach().numpy()
-            return x_word, tokens, [row, col], root_feat, root_index, label, tweetids, processing_metadata
+            x_word = embeddings.reshape(-1, 256 * 768).cpu().detach().numpy()
+            return x_word, cls, tokens, [row, col], root_feat, root_index, label, tweetids, processing_metadata
     except:
         # print(root_tweetid, tweetids, texts)
         raise Exception
@@ -123,7 +124,7 @@ def constructDataMatrix(tree, tokeniser, model, device, verbose=False):
 
 def saveTree(tree, tokeniser, model, device, processing_metadata_dict, eventname):
     data_matrix = constructDataMatrix(tree, tokeniser, model, device)
-    x_word, tokens, edgeindex, root_feat, root_index, label, tweetids, processing_metadata = data_matrix
+    x_word, cls, tokens, edgeindex, root_feat, root_index, label, tweetids, processing_metadata = data_matrix
     root_tweetid = f'{tree["root_tweetid"]}'
     try:
         processing_metadata_dict[eventname][root_tweetid] = processing_metadata
@@ -137,9 +138,11 @@ def saveTree(tree, tokeniser, model, device, processing_metadata_dict, eventname
     root_index = np.array(root_index)
     label = np.array(label)
     tweetids = np.array(tweetids)
+    print(f'Root: {root_tweetid}\t\tTweetid: {tweetids.shape}\t\tEmbeds: {x_word.shape}\t\tCLS: {cls.shape}')
     try:
         np.savez(os.path.join(cwd, 'data', 'PHEMEgraph', f'{root_tweetid}.npz'),
                  x=x_word,
+                 cls=cls,
                  root=root_feat,
                  edgeindex=edgeindex,
                  rootindex=root_index,

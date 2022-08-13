@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Eleventh Commit: Added LSTM as additional baseline.">
+    <list default="true" id="ff76c977-6282-4f79-b869-9a5feb8e48eb" name="Default Changelist" comment="Thirteenth Commit: Version 2 for GCN models. Minor edits to logging for LSTM.">
       <change afterPath="$PROJECT_DIR$/test_vis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Process/getPHEMEgraph.py" beforeDir="false" afterPath="$PROJECT_DIR$/Process/getPHEMEgraph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compare_similarity.py" beforeDir="false" afterPath="$PROJECT_DIR$/compare_similarity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/explain_PHEME.py" beforeDir="false" afterPath="$PROJECT_DIR$/explain_PHEME.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Twitter/BERT_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BERT_Twitter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/BiGCN_Twitter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/EBGCN.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/EBGCN.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Twitter/LSTM_Twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Twitter/LSTM_Twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +70,7 @@
       <recent name="C:\Users\Daniel\Documents\SUTD\PhD\Projects\BiGCN\" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.BiGCN_Twitter">
+  <component name="RunManager" selected="Python.explain_PHEME">
     <configuration name="BiGCN_Twitter" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BiGCN" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -170,7 +176,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="getPHEMEgraph" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="BiGCN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Process/getPHEMEgraph.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Python.getPHEMEgraph" />
       <item itemvalue="Python.explain_PHEME" />
       <item itemvalue="Python.compare_similarity" />
       <item itemvalue="Python.EBGCN" />
@@ -179,9 +207,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.explain_PHEME" />
         <item itemvalue="Python.BiGCN_Twitter" />
         <item itemvalue="Python.EBGCN" />
-        <item itemvalue="Python.explain_PHEME" />
         <item itemvalue="Python.LSTM_Twitter" />
         <item itemvalue="Python.compare_similarity" />
       </list>
@@ -283,7 +311,21 @@
       <option name="project" value="LOCAL" />
       <updated>1659946008186</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Twelfth Commit: Version 2 for GCN models. Minor edits to logging for LSTM.">
+      <created>1660224697891</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1660224697892</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Twelfth Commit: Version 2 for GCN models. Minor edits to logging for LSTM.">
+      <created>1660224705589</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1660224705590</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -310,6 +352,7 @@
     <MESSAGE value="Ninth Commit: Added scripts for generating explanations, comparing to pre-computed centrality metrics for each data sample." />
     <MESSAGE value="Tenth Commit: Fixed faulty model.train() placement in earlier versions of model files. Added exception handling for EBGCN batchnorm1d when batch size is 1. Added prediction and confusion matrix logging for explanation generating script." />
     <MESSAGE value="Eleventh Commit: Added LSTM as additional baseline." />
-    <option name="LAST_COMMIT_MESSAGE" value="Eleventh Commit: Added LSTM as additional baseline." />
+    <MESSAGE value="Twelfth Commit: Version 2 for GCN models. Minor edits to logging for LSTM." />
+    <option name="LAST_COMMIT_MESSAGE" value="Twelfth Commit: Version 2 for GCN models. Minor edits to logging for LSTM." />
   </component>
 </project>

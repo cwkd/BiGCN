@@ -17,7 +17,8 @@ import copy
 
 
 class LSTM(th.nn.Module):
-    def __init__(self, in_feats=768, hid_feats=768, out_feats=4, num_layers=2, device=None):
+    def __init__(self, in_feats=768, hid_feats=768, out_feats=4, num_layers=2,
+                 device=None, pooling='max', version=0):
         super(LSTM, self).__init__()
         self.in_feats = in_feats
         self.hid_feats = hid_feats
@@ -27,9 +28,17 @@ class LSTM(th.nn.Module):
                             num_layers=num_layers, batch_first=True, bidirectional=True, bias=False)
         self.fc = nn.Linear(hid_feats * num_layers * 2, out_feats)
         self.device = device
+        self.version = version
 
     def forward(self, data):
-        new_x = data[:, 0, :].squeeze(1).unsqueeze(0)
+        if self.version == 2:
+            new_x = data
+        else:
+            if self.pooling == 'max':
+                new_x = th.nn.MaxPool1d(256)(data.transpose(2, 1)).squeeze(-1).unsqueeze(0)
+            elif self.pooling == 'mean':
+                new_x = th.nn.AvgPool1d(256)(data.transpose(2, 1)).squeeze(-1).unsqueeze(0)
+        # new_x = data[:, 0, :].squeeze(1).unsqueeze(0)
         assert new_x.shape[-1] == self.in_feats
 
         output, (h_n, c_n) = self.lstm(new_x)
@@ -47,6 +56,7 @@ def collate_fn(data):
 def train_LSTM(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay, patience, n_epochs,
                batchsize, dataname, iter, fold, device, **kwargs):
 
+    version = kwargs.get('version', 2)
     # pooling = kwargs.get('pooling', 'max')
     log_file_path = kwargs['log_file_path']
     if datasetname == "PHEME":
@@ -92,10 +102,17 @@ def train_LSTM(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_deca
                 out_labels = th.zeros(targets.shape[0], 4).to(device)
                 for slice_num, rootindex in enumerate(rootindices):
                     if slice_num == len(rootindices) - 1:
-                        slice = x[rootindex:]
+                        if version == 2:
+                            slice = Batch_data.cls[rootindex:]
+                        else:
+                            slice = x[rootindex:]
                     else:
-                        slice = x[rootindex:rootindices[slice_num + 1]]
-                    slice = slice.reshape(slice.shape[0], -1, 768)
+                        if version == 2:
+                            slice = Batch_data.cls[rootindex:rootindices[slice_num + 1]]
+                        else:
+                            slice = x[rootindex:rootindices[slice_num + 1]]
+                    if version != 2:
+                        slice = slice.reshape(slice.shape[0], -1, 768)
                     # print(slice.shape)
                     slice_out_labels = model(slice)
                     # print(out_labels)
@@ -134,11 +151,17 @@ def train_LSTM(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_deca
                 val_out = th.zeros(targets.shape[0], 4).to(device)
                 for slice_num, rootindex in enumerate(rootindices):
                     if slice_num == len(rootindices) - 1:
-                        slice = x[rootindex:]
+                        if version == 2:
+                            slice = Batch_data.cls[rootindex:]
+                        else:
+                            slice = x[rootindex:]
                     else:
-                        slice = x[rootindex:rootindices[slice_num + 1]]
-                    slice = slice.reshape(slice.shape[0], -1, 768)
-                    # print(slice.shape)
+                        if version == 2:
+                            slice = Batch_data.cls[rootindex:rootindices[slice_num + 1]]
+                        else:
+                            slice = x[rootindex:rootindices[slice_num + 1]]
+                    if version != 2:
+                        slice = slice.reshape(slice.shape[0], -1, 768)
                     slice_val_out = model(slice)
                     # print(out_labels)
                     val_out[slice_num] = slice_val_out

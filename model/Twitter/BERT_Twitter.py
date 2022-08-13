@@ -16,19 +16,25 @@ from transformers import BertModel, BertTokenizer
 # from torch_geometric.nn import GCNConv
 import copy
 
+
 class TreeBERT(th.nn.Module):
-    def __init__(self, in_feats, hid_feats, out_feats, device, pooling='max'):
+    def __init__(self, in_feats, hid_feats, out_feats,
+                 device, pooling='max', version=0):
         super(TreeBERT, self).__init__()
         self.BERT = BertModel.from_pretrained('bert-base-uncased', is_decoder=True).to(device)
         self.fc = th.nn.Linear(768, 4)
         self.device = device
         self.pooling = pooling
+        self.version = version
 
     def forward(self, data):
-        if self.pooling == 'max':
-            new_x = th.nn.MaxPool1d(256)(data.transpose(2, 1)).squeeze(-1).unsqueeze(0)
-        elif self.pooling == 'mean':
-            new_x = th.nn.AvgPool1d(256)(data.transpose(2, 1)).squeeze(-1).unsqueeze(0)
+        if self.version == 2:
+            new_x = data
+        else:
+            if self.pooling == 'max':
+                new_x = th.nn.MaxPool1d(256)(data.transpose(2, 1)).squeeze(-1).unsqueeze(0)
+            elif self.pooling == 'mean':
+                new_x = th.nn.AvgPool1d(256)(data.transpose(2, 1)).squeeze(-1).unsqueeze(0)
 
         output = self.BERT(inputs_embeds=new_x).pooler_output
         output = self.fc(output)
@@ -43,10 +49,11 @@ def collate_fn(data):
 def train_TreeBERT(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay, patience, n_epochs,
                    batchsize, dataname, iter, fold, device, **kwargs):
 
+    version = kwargs.get('version', 2)
     pooling = kwargs['pooling']
     log_file_path = kwargs['log_file_path']
     if datasetname == "PHEME":
-        model = TreeBERT(256*768, 64, 64, device, pooling).to(device)
+        model = TreeBERT(256 * 768, 64, 64, device, pooling).to(device)
     else:
         model = TreeBERT(5000, 64, 64, device, pooling).to(device)
 
@@ -188,7 +195,11 @@ def train_TreeBERT(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_
             F2 = np.mean(temp_val_F2)
             F3 = np.mean(temp_val_F3)
             F4 = np.mean(temp_val_F4)
-            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, f'{pooling}BERT', datasetname,
+            if version == 2:
+                modelname = f'BERTv{version}'
+            else:
+                modelname = f'{pooling}BERT'
+            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, modelname, datasetname,
                            checkpoint=checkpoint)
 
             if early_stopping.early_stop:
@@ -295,6 +306,7 @@ if __name__ == '__main__':
     debug = [None]
     pooling = 'max'
     log_file_path = f'{pooling}{model}_log.txt'
+    version = 2
     for iter in range(iterations):
         if datasetname != 'PHEME':
             fold0_x_test, fold0_x_train, \
@@ -388,7 +400,8 @@ if __name__ == '__main__':
                                         datasetname,
                                         iter,
                                         fold=fold_num,
-                                        device=device, debug=debug, pooling=pooling, log_file_path=log_file_path)
+                                        device=device, debug=debug, pooling=pooling, log_file_path=log_file_path,
+                                        version=version)
                 train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4 = output
                 train_losses_dict[f'train_losses_{fold_num}'] = train_losses
                 val_losses_dict[f'val_losses_{fold_num}'] = val_losses

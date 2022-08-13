@@ -35,7 +35,7 @@ def jaccard_similarity(a, b):
     return similarity
 
 
-def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, errorlog_file_path=None):
+def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, errorlog_file_path=None, version=2):
     centrality_subdir = os.path.join(CENTRALITY_DIR, datasetname, event)
     explain_subdir = os.path.join(EXPLAIN_DIR, datasetname, event)
     metrics = [stats.pearsonr, stats.spearmanr, stats.kendalltau, stats.somersd, jaccard_similarity]
@@ -43,7 +43,7 @@ def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, e
     vec = ['out_degree', 'betweenness', 'closeness',
            'bigcn_td_conv1', 'bigcn_td_conv2', 'bigcn_bu_conv1', 'bigcn_bu_conv2',
            'ebgcn_td_conv1', 'ebgcn_td_conv2', 'ebgcn_bu_conv1', 'ebgcn_bu_conv2',
-           'maxbert_hidden', 'meanbert_hidden']
+           'maxbert_hidden', 'maxbert_attn', 'meanbert_hidden', 'meanbert_attn']
     metrics_mat = np.zeros((len(os.listdir(centrality_subdir)), len(metrics), len(vec), len(vec)))
     # print(metrics_mat.shape)
     errors = 0
@@ -53,17 +53,33 @@ def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, e
         tree_id = filename.split('_')[0]
 
         if randomise != 0:
-            centrality_json_path = os.path.join(centrality_subdir, f'{tree_id}_centrality.json')
-            bigcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_BiGCN_r{randomise}_explain2.json')
-            ebgcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_EBGCN_r{randomise}_explain2.json')
-            maxBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_maxBERT_r{randomise}_explain2.json')
-            meanBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_meanBERT_r{randomise}_explain2.json')
+            if version == 2:
+                centrality_json_path = os.path.join(centrality_subdir, f'{tree_id}_centrality.json')
+                bigcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_BiGCNv2_r{randomise}_explain3.json')
+                ebgcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_EBGCNv2_r{randomise}_explain3.json')
+                maxBERT_explain_json_path = os.path.join(explain_subdir,
+                                                         f'{tree_id}_maxBERT_r{randomise}_explain3.json')
+                meanBERT_explain_json_path = os.path.join(explain_subdir,
+                                                          f'{tree_id}_meanBERT_r{randomise}_explain3.json')
+            else:
+                centrality_json_path = os.path.join(centrality_subdir, f'{tree_id}_centrality.json')
+                bigcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_BiGCN_r{randomise}_explain3.json')
+                ebgcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_EBGCN_r{randomise}_explain3.json')
+                maxBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_maxBERT_r{randomise}_explain3.json')
+                meanBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_meanBERT_r{randomise}_explain3.json')
         else:
-            centrality_json_path = os.path.join(centrality_subdir, f'{tree_id}_centrality.json')
-            bigcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_BiGCN_explain2.json')
-            ebgcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_EBGCN_explain2.json')
-            maxBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_maxBERT_explain2.json')
-            meanBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_meanBERT_explain2.json')
+            if version == 2:
+                centrality_json_path = os.path.join(centrality_subdir, f'{tree_id}_centrality.json')
+                bigcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_BiGCNv2_explain3.json')
+                ebgcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_EBGCNv2_explain3.json')
+                maxBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_maxBERT_explain3.json')
+                meanBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_meanBERT_explain3.json')
+            else:
+                centrality_json_path = os.path.join(centrality_subdir, f'{tree_id}_centrality.json')
+                bigcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_BiGCN_explain3.json')
+                ebgcn_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_EBGCN_explain3.json')
+                maxBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_maxBERT_explain3.json')
+                meanBERT_explain_json_path = os.path.join(explain_subdir, f'{tree_id}_meanBERT_explain3.json')
 
         # Centrality
         with open(centrality_json_path, 'r') as f:
@@ -111,10 +127,14 @@ def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, e
                 maxBERT_explain_json = json.load(f)
             maxbert_hidden = maxBERT_explain_json['bert_last_hidden_sum_top_k'][0]
             maxbert_hidden = maxbert_hidden[:k] if len(maxbert_hidden) > k else maxbert_hidden
+            maxbert_attn = maxBERT_explain_json['bert_attentions_top_k'][0]
+            maxbert_attn = maxbert_attn[:k] if len(maxbert_attn) > k else maxbert_attn
             with open(meanBERT_explain_json_path, 'r') as f:
                 meanBERT_explain_json = json.load(f)
             meanbert_hidden = meanBERT_explain_json['bert_last_hidden_sum_top_k'][0]
             meanbert_hidden = meanbert_hidden[:k] if len(meanbert_hidden) > k else meanbert_hidden
+            meanbert_attn = meanBERT_explain_json['bert_attentions_top_k'][0]
+            meanbert_attn = meanbert_attn[:k] if len(meanbert_attn) > k else meanbert_attn
 
         except:
             print(f'Error: Missing explanation files for Tree num {tree_id}\tRandomise: {randomise}')
@@ -122,7 +142,7 @@ def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, e
         vec = [out_degree, betweenness, closeness,
                bigcn_td_conv1, bigcn_td_conv2, bigcn_bu_conv1, bigcn_bu_conv2,
                ebgcn_td_conv1, ebgcn_td_conv2, ebgcn_bu_conv1, ebgcn_bu_conv2,
-               maxbert_hidden, meanbert_hidden]
+               maxbert_hidden, maxbert_attn, meanbert_hidden, meanbert_attn]
         # print(tree_id)
         temp_mat = np.zeros((len(metrics), len(vec), len(vec)))
         for metric_num in range(len(metrics) - 1):
@@ -156,7 +176,10 @@ def compute_metrics(k=10, datasetname=DATASETNAME, event=EVENT, randomise=0.0, e
     with open(errorlog_file_path, 'w') as f:
         f.write(error_log)
     # np.save(os.path.join(DATA_DIR, f'{datasetname}_{event}'), metrics_mat)
-    np.save(os.path.join(EXPLAIN_DIR, f'k{k}_{datasetname}_{event}_r{randomise}'), metrics_mat)
+    if version == 2:
+        np.save(os.path.join(EXPLAIN_DIR, f'k{k}_{datasetname}_{event}_r{randomise}_3'), metrics_mat)
+    else:
+        np.save(os.path.join(EXPLAIN_DIR, f'k{k}_{datasetname}_{event}_r{randomise}_3v2'), metrics_mat)
     return metrics_mat
 
 
@@ -166,7 +189,7 @@ def summarise_metrics(mat, save_path):
     vec = ['out_degree', 'betweenness', 'closeness',
            'bigcn_td_conv1', 'bigcn_td_conv2', 'bigcn_bu_conv1', 'bigcn_bu_conv2',
            'ebgcn_td_conv1', 'ebgcn_td_conv2', 'ebgcn_bu_conv1', 'ebgcn_bu_conv2',
-           'maxbert_hidden', 'meanbert_hidden']
+           'maxbert_hidden', 'maxbert_attn', 'meanbert_hidden', 'meanbert_attn']
     s = ''
     avg_metrics_mat = np.zeros((len(metrics), len(vec), len(vec)))
     for metric_num in range(len(metrics)):
@@ -198,26 +221,42 @@ if __name__ == '__main__':
     vec = ['out_degree', 'betweenness', 'closeness',
            'bigcn_td_conv1', 'bigcn_td_conv2', 'bigcn_bu_conv1', 'bigcn_bu_conv2',
            'ebgcn_td_conv1', 'ebgcn_td_conv2', 'ebgcn_bu_conv1', 'ebgcn_bu_conv2',
-           'maxbert_hidden', 'meanbert_hidden']
+           'maxbert_hidden', 'maxbert_attn', 'meanbert_hidden', 'meanbert_attn']
     num_metrics = 5
+    version = 2
     for k in k_types:
         for randomise in randomise_types:
             all_event_metrics_mat = np.zeros((len(FOLD_2_EVENTNAME), num_metrics, len(vec), len(vec)))
             for fold_num in range(len(FOLD_2_EVENTNAME)):
                 event_name = FOLD_2_EVENTNAME[fold_num]
                 print(f'Processing k{k}_{DATASETNAME}_{event_name}_r{randomise}\n')
-                errorlog_file_path = os.path.join(
-                    EXPLAIN_DIR,
-                    f'k{k}_{DATASETNAME}_{event_name}_r{randomise}_compare_similarity_error_log.txt')
-                metrics_mat = compute_metrics(k, DATASETNAME, event_name, randomise, errorlog_file_path)
-                summary_file_path = os.path.join(
-                    EXPLAIN_DIR,
-                    f'k{k}_{DATASETNAME}_{event_name}_r{randomise}_metrics_summary.txt')
+                if version == 2:
+                    errorlog_file_path = os.path.join(
+                        EXPLAIN_DIR,
+                        f'k{k}_{DATASETNAME}_{event_name}_r{randomise}_compare_similarity_error_log3v2.txt')
+                else:
+                    errorlog_file_path = os.path.join(
+                        EXPLAIN_DIR,
+                        f'k{k}_{DATASETNAME}_{event_name}_r{randomise}_compare_similarity_error_log3.txt')
+                metrics_mat = compute_metrics(k, DATASETNAME, event_name, randomise, errorlog_file_path, version)
+                if version == 2:
+                    summary_file_path = os.path.join(
+                        EXPLAIN_DIR,
+                        f'k{k}_{DATASETNAME}_{event_name}_r{randomise}_metrics_summary3v2.txt')
+                else:
+                    summary_file_path = os.path.join(
+                        EXPLAIN_DIR,
+                        f'k{k}_{DATASETNAME}_{event_name}_r{randomise}_metrics_summary3.txt')
                 all_event_metrics_mat[fold_num] = summarise_metrics(metrics_mat, save_path=summary_file_path)
             else:
-                all_event_summary_file_path = os.path.join(
-                    EXPLAIN_DIR,
-                    f'k{k}_{DATASETNAME}_allevents_r{randomise}_metrics_summary.txt')
+                if version == 2:
+                    all_event_summary_file_path = os.path.join(
+                        EXPLAIN_DIR,
+                        f'k{k}_{DATASETNAME}_allevents_r{randomise}_metrics_summary3v2.txt')
+                else:
+                    all_event_summary_file_path = os.path.join(
+                        EXPLAIN_DIR,
+                        f'k{k}_{DATASETNAME}_allevents_r{randomise}_metrics_summary3.txt')
                 all_event_metrics_mat.sum(axis=0)
                 summarise_metrics(all_event_metrics_mat, save_path=all_event_summary_file_path)
     # metrics_mat = np.load('data/PHEME_charliehebdo.npy')

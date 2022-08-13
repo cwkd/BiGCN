@@ -62,8 +62,8 @@ class BiGraphDataset(Dataset):
         return len(self.fold_x)
 
     def __getitem__(self, index):
-        id =self.fold_x[index]
-        data=np.load(os.path.join(self.data_path, id + ".npz"), allow_pickle=True)
+        id = self.fold_x[index]
+        data = np.load(os.path.join(self.data_path, id + ".npz"), allow_pickle=True)
         edgeindex = data['edgeindex']
         if self.tddroprate > 0:
             row = list(edgeindex[0])
@@ -92,6 +92,7 @@ class BiGraphDataset(Dataset):
         for i, value in enumerate(data['tweetids']):
             tweetids[i] = int(value)
         return Data(x=torch.tensor(data['x'], dtype=torch.float32),
+                    cls=torch.tensor(data['cls'], dtype=torch.float32),
                     edge_index=torch.LongTensor(new_edgeindex), BU_edge_index=torch.LongTensor(bunew_edgeindex),
                     y=torch.LongTensor([int(data['y'])]), root=torch.LongTensor(data['root']),
                     rootindex=torch.LongTensor([int(data['rootindex'])]),

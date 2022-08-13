@@ -11,7 +11,7 @@ from torch_scatter import scatter_mean
 from torch_geometric.data import DataLoader
 from torch_geometric.nn.conv import gcn_conv
 
-from model.Twitter.BiGCN_Twitter import Net
+from model.Twitter.BiGCN_Twitter import BiGCN
 from model.Twitter.BERT_Twitter import TreeBERT
 from model.Twitter.EBGCN import EBGCN
 from Process.process import loadBiData, loadTree
@@ -42,7 +42,8 @@ CHECKPOINT_DIR = os.path.join(ROOT_DIR, 'model', 'Twitter', 'checkpoints')
 random.seed(0)
 
 LRP_PARAMS = {
-    'linear_eps': 1e-6
+    'linear_eps': 1e-6,
+    'gcn_conv': 1e-6
 }
 
 
@@ -55,13 +56,16 @@ def swap_elements(lst, idx1, idx2):
     return lst
 
 
-def extract_gcn_conv(conv: gcn_conv.GCNConv, x, edge_index, edge_weight=None):
+def extract_bigcn(bigcn: BiGCN, data):
+    x, edge_index, edge_weight = data.x, data.edge_index, data.edge_weight
 
     edge_index, edge_weight = gcn_conv.gcn_norm(  # yapf: disable
         edge_index, edge_weight, x.size(-2), False, True)
 
+    lrp_bigcn = lrp_utils.convert_model(bigcn)
+
     temp_linear = None
-    for name, mod in conv.named_modules():
+    for name, mod in bigcn.named_modules():
         # print('\n', name, mod)
         temp = lrp_utils.get_lrpwrappermodule(mod, LRP_PARAMS)
         if temp is not None:
@@ -326,6 +330,7 @@ if __name__ == '__main__':
     model_types = ['BiGCN', 'EBGCN', 'BERT']
     pooling_types = ['max', 'mean']
     randomise_types = [1.0, 0.5, 0.25, 0.0]
+    version = 2
     # model = "BiGCN"
     # model = 'EBGCN'
     # model = 'BERT'
@@ -341,70 +346,73 @@ if __name__ == '__main__':
 
     # init network
     if model == 'BiGCN':
-        net = Net(256 * 768, 64, 64, device).to(device)
-        checkpoint_paths = ['best_BiGCN_PHEME_f0_i0_e00005_l1.17733.pt',
-                            'best_BiGCN_PHEME_f1_i0_e00004_l1.06584.pt',
-                            'best_BiGCN_PHEME_f2_i0_e00004_l1.09573.pt',
-                            'best_BiGCN_PHEME_f3_i0_e00005_l1.04328.pt',
-                            'best_BiGCN_PHEME_f4_i0_e00000_l2.39317.pt',
-                            'best_BiGCN_PHEME_f5_i0_e00005_l0.96496.pt',
-                            'best_BiGCN_PHEME_f6_i0_e00000_l1.78671.pt',
-                            'best_BiGCN_PHEME_f7_i0_e00010_l1.05369.pt',
-                            'best_BiGCN_PHEME_f8_i0_e00003_l1.13725.pt']
-        # checkpoint_paths = ['bigcn_f0_i5_e00016_l0.35202.pt',
-        #                     'bigcn_f1_i0_e00029_l0.45703.pt',
-        #                     'bigcn_f2_i0_e00019_l0.78689.pt',
-        #                     'bigcn_f3_i4_e00021_l0.76735.pt',
-        #                     'bigcn_f4_i5_e00012_l0.31995.pt',
-        #                     'bigcn_f5_i7_e00015_l0.19297.pt',
-        #                     'bigcn_f6_i0_e00016_l0.01913.pt',
-        #                     'bigcn_f7_i0_e00018_l0.15752.pt',
-        #                     'bigcn_f8_i6_e00018_l0.69322.pt']
+        if version == 2:
+            net = BiGCN(768, 64, 64, device).to(device)
+            checkpoint_paths = ['best_BiGCNv2_PHEME_f0_i0_e00010_l1.15208.pt',
+                                'best_BiGCNv2_PHEME_f1_i0_e00008_l1.05072.pt',
+                                'best_BiGCNv2_PHEME_f2_i0_e00020_l1.08177.pt',
+                                'best_BiGCNv2_PHEME_f3_i0_e00007_l1.03529.pt',
+                                'best_BiGCNv2_PHEME_f4_i0_e00002_l1.05113.pt',
+                                'best_BiGCNv2_PHEME_f5_i0_e00015_l1.01648.pt',
+                                'best_BiGCNv2_PHEME_f6_i0_e00008_l1.01215.pt',
+                                'best_BiGCNv2_PHEME_f7_i0_e00004_l1.03937.pt',
+                                'best_BiGCNv2_PHEME_f8_i0_e00012_l1.03518.pt']
+        else:
+            net = BiGCN(256 * 768, 64, 64, device).to(device)
+            checkpoint_paths = ['best_BiGCN_PHEME_f0_i0_e00000_l2.58756.pt',
+                                'best_BiGCN_PHEME_f1_i0_e00005_l0.91267.pt',
+                                'best_BiGCN_PHEME_f2_i0_e00004_l1.09914.pt',
+                                'best_BiGCN_PHEME_f3_i0_e00008_l0.86908.pt',
+                                'best_BiGCN_PHEME_f4_i0_e00001_l1.29333.pt',
+                                'best_BiGCN_PHEME_f5_i0_e00022_l1.05188.pt',
+                                'best_BiGCN_PHEME_f6_i0_e00013_l1.54089.pt',
+                                'best_BiGCN_PHEME_f7_i0_e00000_l2.62842.pt',
+                                'best_BiGCN_PHEME_f8_i0_e00001_l1.20063.pt']
     elif model == 'EBGCN':
+        if version == 2:
+            args.input_features = 768
+            checkpoint_paths = ['best_EBGCNv2_PHEME_f0_i0_e00020_lnan.pt',
+                                'best_EBGCNv2_PHEME_f1_i0_e00011_l1.04509.pt',
+                                'best_EBGCNv2_PHEME_f2_i0_e00008_l1.08375.pt',
+                                'best_EBGCNv2_PHEME_f3_i0_e00003_l1.03676.pt',
+                                'best_EBGCNv2_PHEME_f4_i0_e00008_l1.04952.pt',
+                                'best_EBGCNv2_PHEME_f5_i0_e00015_l1.01531.pt',
+                                'best_EBGCNv2_PHEME_f6_i0_e00010_l1.00891.pt',
+                                'best_EBGCNv2_PHEME_f7_i0_e00005_l1.03545.pt',
+                                'best_EBGCNv2_PHEME_f8_i0_e00007_l1.03625.pt']
+        else:
+            checkpoint_paths = ['best_EBGCN_PHEME_f0_i0_e00000_l3.09134.pt',
+                                'best_EBGCN_PHEME_f1_i0_e00001_l1.47202.pt',
+                                'best_EBGCN_PHEME_f2_i0_e00000_l4.20667.pt',
+                                'best_EBGCN_PHEME_f3_i0_e00000_l1.89826.pt',
+                                'best_EBGCN_PHEME_f4_i0_e00000_l2.71517.pt',
+                                'best_EBGCN_PHEME_f5_i0_e00001_l1.27510.pt',
+                                'best_EBGCN_PHEME_f6_i0_e00005_l3.82950.pt',
+                                'best_EBGCN_PHEME_f7_i0_e00002_l5.05543.pt',
+                                'best_EBGCN_PHEME_f8_i0_e00000_l3.04835.pt']
         net = EBGCN(args).to(device)
-        checkpoint_paths = ['best_EBGCN_PHEME_f0_i0_e00007_l0.62714.pt',
-                            'best_EBGCN_PHEME_f1_i0_e00006_l1.77484.pt',
-                            'best_EBGCN_PHEME_f2_i0_e00003_l1.00047.pt',
-                            'best_EBGCN_PHEME_f3_i0_e00008_l0.94641.pt',
-                            'best_EBGCN_PHEME_f4_i0_e00000_l1.81918.pt',
-                            'best_EBGCN_PHEME_f5_i0_e00000_l2.73212.pt',
-                            'best_EBGCN_PHEME_f6_i0_e00000_l2.18175.pt',
-                            'best_EBGCN_PHEME_f7_i0_e00012_l0.35055.pt',
-                            'best_EBGCN_PHEME_f8_i0_e00003_l1.76857.pt']
-        # checkpoint_paths = ['ebgcnPHEME charliehebdo.m',
-        #                     'ebgcnPHEME ebola-essien.m',
-        #                     'ebgcnPHEME ferguson.m',
-        #                     'ebgcnPHEME germanwings-crash.m',
-        #                     'ebgcnPHEME gurlitt.m',
-        #                     'ebgcnPHEME ottawashooting.m',
-        #                     'ebgcnPHEME prince-toronto.m',
-        #                     'ebgcnPHEME putinmissing.m',
-        #                     'ebgcnPHEME sydneysiege.m']
-        # obj = torch.load(checkpoint_paths[0])
     elif model == 'BERT':
         net = TreeBERT(256 * 768, 64, 64, device, pooling).to(device)
         if pooling == 'max':
-            checkpoint_paths = ['best_maxBERT_PHEME_f0_i0_e00007_l1.18175.pt',
-                                'best_maxBERT_PHEME_f1_i0_e00004_l1.08462.pt',
-                                'best_maxBERT_PHEME_f2_i0_e00004_l1.12532.pt',
-                                'best_maxBERT_PHEME_f3_i0_e00007_l1.06524.pt',
-                                'best_maxBERT_PHEME_f4_i0_e00011_l1.08704.pt',
-                                'best_maxBERT_PHEME_f5_i0_e00007_l1.05438.pt',
-                                'best_maxBERT_PHEME_f6_i0_e00015_l1.03478.pt',
-                                'best_maxBERT_PHEME_f7_i0_e00009_l1.07684.pt',
-                                'best_maxBERT_PHEME_f8_i0_e00002_l1.07145.pt']
-            # checkpoint_paths = ['maxtreebert_f0_i0_e00021_l4.40295.pt']
+            checkpoint_paths = ['best_maxBERT_PHEME_f0_i0_e00009_l1.17979.pt',
+                                'best_maxBERT_PHEME_f1_i0_e00010_l1.06600.pt',
+                                'best_maxBERT_PHEME_f2_i0_e00000_l1.11815.pt',
+                                'best_maxBERT_PHEME_f3_i0_e00002_l1.07477.pt',
+                                'best_maxBERT_PHEME_f4_i0_e00014_l1.08990.pt',
+                                'best_maxBERT_PHEME_f5_i0_e00003_l1.04956.pt',
+                                'best_maxBERT_PHEME_f6_i0_e00017_l1.02660.pt',
+                                'best_maxBERT_PHEME_f7_i0_e00005_l1.05289.pt',
+                                'best_maxBERT_PHEME_f8_i0_e00009_l1.05622.pt']
         elif pooling == 'mean':
-            checkpoint_paths = ['best_meanBERT_PHEME_f0_i0_e00010_l1.17131.pt',
-                                'best_meanBERT_PHEME_f1_i0_e00005_l1.08910.pt',
-                                'best_meanBERT_PHEME_f2_i0_e00007_l1.09002.pt',
-                                'best_meanBERT_PHEME_f3_i0_e00001_l1.06774.pt',
-                                'best_meanBERT_PHEME_f4_i0_e00006_l1.06748.pt',
-                                'best_meanBERT_PHEME_f5_i0_e00000_l1.05710.pt',
-                                'best_meanBERT_PHEME_f6_i0_e00000_l1.04125.pt',
-                                'best_meanBERT_PHEME_f7_i0_e00003_l1.07912.pt',
-                                'best_meanBERT_PHEME_f8_i0_e00009_l1.07655.pt']
-            # checkpoint_paths = ['meantreebert_f0_i0_e00010_l4.34632.pt']
+            checkpoint_paths = ['best_meanBERT_PHEME_f0_i0_e00003_l1.17501.pt',
+                                'best_meanBERT_PHEME_f1_i0_e00002_l1.07119.pt',
+                                'best_meanBERT_PHEME_f2_i0_e00002_l1.12696.pt',
+                                'best_meanBERT_PHEME_f3_i0_e00006_l1.06270.pt',
+                                'best_meanBERT_PHEME_f4_i0_e00000_l1.09271.pt',
+                                'best_meanBERT_PHEME_f5_i0_e00000_l1.05106.pt',
+                                'best_meanBERT_PHEME_f6_i0_e00003_l1.02298.pt',
+                                'best_meanBERT_PHEME_f7_i0_e00008_l1.07355.pt',
+                                'best_meanBERT_PHEME_f8_i0_e00006_l1.05688.pt']
 
     # folder_path = os.path.join(EXPLAIN_DIR, datasetname, 'charliehebdo')
     # filenames = list(filter(lambda x: x.find('BERT') != -1, os.listdir(folder_path)))
@@ -423,26 +431,26 @@ if __name__ == '__main__':
     #                 sub_child: torch_geometric.nn.conv.gcn_conv.GCNConv
     #                 # sub_child.explain = True
     outputs = []
+    model_copy = None
     for randomise in randomise_types:
+        if version == 2:
+            model0 = model + 'v2'
+        else:
+            model0 = model
         print(f'\nGenerating:\t'
-              f'Model: {model}\t'
+              f'Model: {model0}\t'
               f'Pooling: {pooling if model == "BERT" else None}\t'
               f'Randomise: {randomise}')
         for fold_num, (fold_train, fold_test) in enumerate(load9foldData(datasetname)):
             try:
                 checkpoint_path = os.path.join(CHECKPOINT_DIR, datasetname, checkpoint_paths[fold_num])
                 checkpoint = torch.load(checkpoint_path)
-                # if model == 'EBGCN':
-                #     net.load_state_dict(checkpoint)
-                # else:
-                #     net.load_state_dict(checkpoint['model_state_dict'])
                 net.load_state_dict(checkpoint['model_state_dict'])
                 print(f'Checkpoint loaded from {checkpoint_path}')
             except:
                 print('No checkpoint to load')
             net.eval()
             fold_output = {}
-            # print(fold_num)
             event_name = FOLD_2_EVENTNAME[fold_num]
             if not os.path.exists(os.path.join(EXPLAIN_DIR, datasetname, event_name)):
                 os.makedirs(os.path.join(EXPLAIN_DIR, datasetname, event_name))
@@ -459,11 +467,15 @@ if __name__ == '__main__':
             # train_loader = DataLoader(traindata_list, batch_size=batchsize, shuffle=False, num_workers=5)
             test_loader = DataLoader(testdata_list, batch_size=batchsize, shuffle=False, num_workers=5)
             if model != 'BERT':
+                if version == 2:
+                    model0 = model + 'v2'
+                else:
+                    model0 = model
                 evaluation_log_path = os.path.join(EXPLAIN_DIR,
-                                                   f'{datasetname}_{event_name}_{model}_r{randomise}_eval.txt')
+                                                   f'{datasetname}_{event_name}_{model0}_r{randomise}_eval3.txt')
             else:
                 evaluation_log_path = os.path.join(EXPLAIN_DIR,
-                                                   f'{datasetname}_{event_name}_{pooling}{model}_r{randomise}_eval.txt')
+                                                   f'{datasetname}_{event_name}_{pooling}{model}_r{randomise}_eval3.txt')
             eval_log_string = ''
             conf_mat = np.zeros((4, 4))
             for sample_num, (data_sample, root_tweetid) in enumerate(tqdm(test_loader)):
@@ -471,6 +483,21 @@ if __name__ == '__main__':
                 # print(type(data_sample['edge_index']), isinstance(data_sample['edge_index'], torch_sparse.SparseTensor))
                 data_sample.retains_grad = True
                 data_sample = data_sample.to(device)
+
+                lrp = True
+                # TODO: Finish this
+                if lrp:
+                    # model_copy = extract_bigcn(net, data_sample)
+                    # model_copy = lrp_utils.convert_model(net, LRP_PARAMS)
+                    temp_x = data_sample.x.reshape(data_sample.x.shape[0], -1, 768)[:, 0]
+                    temp_x.requires_grad = True
+                    gcn_copy = lrp_utils.get_lrpwrappermodule(net.TDrumorGCN.conv1, LRP_PARAMS)
+                    with torch.enable_grad():
+                        temp_output = gcn_copy(temp_x, data_sample.edge_index)
+                        print(temp_output.shape)
+                        ret = temp_output[0, 0].backward()
+                        print(ret)
+                    raise Exception
 
                 x = data_sample.x
                 if randomise == 1.0:
@@ -504,12 +531,26 @@ if __name__ == '__main__':
                 # print('x_sum', x_sum)
                 x_sum_top_k = torch.topk(x_sum,
                                          k=x_sum.shape[0])
+                # if x.shape[0] != len(node_num_to_tweetid) \
+                #         or x.shape[0] != x_sum.shape[0] \
+                #         or x.shape[0] != x_sum_top_k.indices.shape[0] \
+                #         or x_sum.shape[0] != x_sum_top_k.indices.shape[0]:
+                #     print('Error')
+                    # print(root_tweetid, len(tweetids), x.shape, x_sum.shape, x_sum_top_k.indices.shape)
+                    # raise Exception
+                # print(root_tweetid, len(node_num_to_tweetid), x.shape, x_sum.shape, x_sum_top_k.indices.shape)
                 # print('x_sum_top_k', x_sum_top_k)
                 explain_output['x_sum_top_k'] = [x_sum_top_k.indices.tolist(),
                                                  x_sum_top_k.values.tolist()]
 
                 # TODO: Need to finish the extract method
                 if model == 'BiGCN':
+                    if version == 2:  # Version 2
+                        new_x = x
+                        new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                        new_x = new_x[:, 0]
+                        x = new_x
+                        data_sample.x = x
                     # TD
                     td_gcn_conv1 = net.TDrumorGCN.conv1
                     td_gcn_conv2 = net.TDrumorGCN.conv2
@@ -523,14 +564,13 @@ if __name__ == '__main__':
                                                                       BU_edge_index, data_sample, device)
                     explain_output['bu_gcn_explanations'] = bu_gcn_explanations
                     out_labels = net(data_sample)
-                    # _, pred = out_labels.max(dim=-1)
-                    # correct = pred.eq(data_sample.y).sum().item()
-                    # print(pred.item(), data_sample.y.item(), correct)
-                    # explain_output['prediction'] = pred.item()
-                    # explain_output['ground_truth'] = data_sample.y.item()
-                    # explain_output['correct_prediction'] = correct
-                    # raise Exception
                 elif model == 'EBGCN':
+                    if version == 2:  # Version 2
+                        new_x = x
+                        new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                        new_x = new_x[:, 0]
+                        x = new_x
+                        data_sample.x = x
                     # TD
                     td_gcn_explanations = extract_intermediates_ebgcn(net.TDrumorGCN, x, edge_index, data_sample, device)
                     explain_output['td_gcn_explanations'] = td_gcn_explanations
@@ -538,26 +578,26 @@ if __name__ == '__main__':
                     bu_gcn_explanations = extract_intermediates_ebgcn(net.BUrumorGCN, x, BU_edge_index, data_sample, device)
                     explain_output['bu_gcn_explanations'] = bu_gcn_explanations
                     out_labels, _, _ = net(data_sample)
-                    # _, pred = out_labels.max(dim=-1)
-                    # correct = pred.eq(data_sample.y).sum().item()
-                    # print(pred.item(), data_sample.y.item(), correct)
-                    # explain_output['prediction'] = pred.item()
-                    # explain_output['ground_truth'] = data_sample.y.item()
-                    # explain_output['correct_prediction'] = correct
-                    # raise Exception
                 elif model == 'BERT':
                     x = x.reshape(x.shape[0], -1, 768)
                     if pooling == 'max':
                         new_x = nn.MaxPool1d(256)(x.transpose(2, 1)).squeeze(-1).unsqueeze(0)
                     elif pooling == 'mean':
                         new_x = nn.AvgPool1d(256)(x.transpose(2, 1)).squeeze(-1).unsqueeze(0)
-                    bert_out = net.BERT(inputs_embeds=new_x)
+                    bert_out = net.BERT(inputs_embeds=new_x, output_attentions=True)
                     bert_last_hidden = bert_out.last_hidden_state.squeeze(0)
                     bert_last_hidden_sum = torch.sum(bert_last_hidden, dim=-1)
                     bert_last_hidden_sum_top_k = torch.topk(bert_last_hidden_sum,
                                                             k=bert_last_hidden_sum.shape[0])
                     explain_output['bert_last_hidden_sum_top_k'] = [bert_last_hidden_sum_top_k.indices.tolist(),
                                                                     bert_last_hidden_sum_top_k.values.tolist()]
+                    bert_attentions = torch.zeros(new_x.shape[1]).to(device)
+                    temp = bert_out.attentions
+                    for attention_head in temp:
+                        bert_attentions += attention_head.sum(-2).sum(1).squeeze()
+                    bert_attentions_top_k = torch.topk(bert_attentions, k=new_x.shape[1])
+                    explain_output['bert_attentions_top_k'] = [bert_attentions_top_k.indices.tolist(),
+                                                               bert_attentions_top_k.values.tolist()]
                     out_labels = net(x)
                 _, pred = out_labels.max(dim=-1)
                 correct = pred.eq(data_sample.y).sum().item()
@@ -568,41 +608,46 @@ if __name__ == '__main__':
                 eval_log_string += f'{root_tweetid[0]}: pred: {pred.item()} gt: {data_sample.y.item()}\n'
                 conf_mat[data_sample.y.item(), pred.item()] += 1
 
-                # TODO: Finish this
-                # extract_gcn_conv(td_gcn_conv1, x, edge_index)
-                # raise Exception
-
                 fold_output[int(root_tweetid[0])] = explain_output
-                if model == 'BiGCN':
-                    if randomise != 0:
-                        with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
-                                               f'{root_tweetid[0]}_{model}_r{randomise}_explain2.json'), 'w') as f:
-                            json.dump(explain_output, f, indent=1)
-                    else:
-                        with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
-                                               f'{root_tweetid[0]}_{model}_explain2.json'), 'w') as f:
-                            json.dump(explain_output, f, indent=1)
-                elif model == 'EBGCN':
-                    if randomise != 0:
-                        with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
-                                               f'{root_tweetid[0]}_{model}_r{randomise}_explain2.json'), 'w') as f:
-                            json.dump(explain_output, f, indent=1)
-                    else:
-                        with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
-                                               f'{root_tweetid[0]}_{model}_explain2.json'), 'w') as f:
-                            json.dump(explain_output, f, indent=1)
-                elif model == 'BERT':
-                    if randomise != 0:
-                        with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
-                                               f'{root_tweetid[0]}_{pooling}{model}_r{randomise}_explain2.json'), 'w') as f:
-                            json.dump(explain_output, f, indent=1)
-                    else:
-                        with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
-                                               f'{root_tweetid[0]}_{pooling}{model}_explain2.json'), 'w') as f:
-                            json.dump(explain_output, f, indent=1)
-                # if sample_num > 10:
-                #     break
-                # print(f'Success: {root_tweetid[0]}\n')
+                save = True
+                if save:
+                    if model == 'BiGCN':
+                        if version == 2:
+                            model0 = model + 'v2'
+                        else:
+                            model0 = model
+                        if randomise != 0:
+                            with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
+                                                   f'{root_tweetid[0]}_{model0}_r{randomise}_explaindebug.json'), 'w') as f:
+                                json.dump(explain_output, f, indent=1)
+                        else:
+                            with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
+                                                   f'{root_tweetid[0]}_{model0}_explaindebug.json'), 'w') as f:
+                                json.dump(explain_output, f, indent=1)
+                    elif model == 'EBGCN':
+                        if version == 2:
+                            model0 = model + 'v2'
+                        else:
+                            model0 = model
+                        if randomise != 0:
+                            with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
+                                                   f'{root_tweetid[0]}_{model0}_r{randomise}_explain3.json'), 'w') as f:
+                                json.dump(explain_output, f, indent=1)
+                        else:
+                            with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
+                                                   f'{root_tweetid[0]}_{model0}_explain3.json'), 'w') as f:
+                                json.dump(explain_output, f, indent=1)
+                    elif model == 'BERT':
+                        if randomise != 0:
+                            with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
+                                                   f'{root_tweetid[0]}_{pooling}{model}_r{randomise}_explain3.json'), 'w') as f:
+                                json.dump(explain_output, f, indent=1)
+                        else:
+                            with open(os.path.join(EXPLAIN_DIR, datasetname, event_name,
+                                                   f'{root_tweetid[0]}_{pooling}{model}_explain3.json'), 'w') as f:
+                                json.dump(explain_output, f, indent=1)
+                # raise Exception
+            # break
             outputs.append(fold_output)
             total_evaluated = conf_mat.sum()
             total_correct = conf_mat.diagonal().sum()
@@ -625,8 +670,10 @@ if __name__ == '__main__':
                     eval_log_string += f' {"Actual":20} | {f"Class {i}":20} |'
                 eval_log_string += f' {conf_mat[i, 0]:20} | {conf_mat[i, 1]:20} |' \
                                    f' {conf_mat[i, 2]:20} | {conf_mat[i, 3]:20}\n'
-            with open(evaluation_log_path, 'w') as f:
-                f.write(eval_log_string)
+            save = True
+            if save:
+                with open(evaluation_log_path, 'w') as f:
+                    f.write(eval_log_string)
             # break
     # with open('explain_outputs.json', 'w') as f:
     #     json.dump(outputs, f, indent=1)

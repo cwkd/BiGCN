@@ -291,10 +291,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
                 # print(Batch_data, tweetid)
                 Batch_data.to(device)
                 if version == 2:  # Version 2
-                    new_x = Batch_data.x
-                    new_x = new_x.reshape(new_x.shape[0], -1, 768)
-                    new_x = new_x[:, 0]
-                    Batch_data.x = new_x
+                    # new_x = Batch_data.x
+                    # new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                    # new_x = new_x[:, 0]
+                    # Batch_data.x = new_x
+                    Batch_data.x = Batch_data.cls
                 # print(model.TDrumorGCN.conv1.lin(Batch_data.x).shape)
                 out_labels, TD_edge_loss, BU_edge_loss = model(Batch_data)
                 finalloss = F.nll_loss(out_labels, Batch_data.y)
@@ -329,10 +330,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             for Batch_data, tweetid in tqdm_test_loader:
                 Batch_data.to(device)
                 if version == 2:  # Version 2
-                    new_x = Batch_data.x
-                    new_x = new_x.reshape(new_x.shape[0], -1, 768)
-                    new_x = new_x[:, 0]
-                    Batch_data.x = new_x
+                    # new_x = Batch_data.x
+                    # new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                    # new_x = new_x[:, 0]
+                    # Batch_data.x = new_x
+                    Batch_data.x = Batch_data.cls
                 val_out, _, _ = model(Batch_data)
                 val_loss = F.nll_loss(val_out, Batch_data.y)
                 temp_val_losses.append(val_loss.item())
@@ -383,7 +385,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             F2 = np.mean(temp_val_F2)
             F3 = np.mean(temp_val_F3)
             F4 = np.mean(temp_val_F4)
-            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, f'EBGCNv{version}', datasetname,
+            if version == 2:
+                modelname = f'EBGCNv{version}'
+            else:
+                modelname = 'EBGCN'
+            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, modelname, datasetname,
                            checkpoint=checkpoint)
 
             if early_stopping.early_stop:
@@ -654,7 +660,8 @@ if __name__ == '__main__':
                                    iter,
                                    fold=fold_num,
                                    device=device,
-                                   args=args, log_file_path=log_file_path)
+                                   args=args, log_file_path=log_file_path,
+                                   version=2)
                 train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4 = output
                 train_losses_dict[f'train_losses_{fold_num}'] = train_losses
                 val_losses_dict[f'val_losses_{fold_num}'] = val_losses

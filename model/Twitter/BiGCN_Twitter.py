@@ -114,12 +114,12 @@ class BUrumorGCN(th.nn.Module):
         return x
 
 
-class Net(th.nn.Module):
+class BiGCN(th.nn.Module):
     def __init__(self, in_feats, hid_feats, out_feats, device):
-        super(Net, self).__init__()
+        super(BiGCN, self).__init__()
         self.TDrumorGCN = TDrumorGCN(in_feats, hid_feats, out_feats, device)
         self.BUrumorGCN = BUrumorGCN(in_feats, hid_feats, out_feats, device)
-        self.fc=th.nn.Linear((out_feats+hid_feats)*2,4)
+        self.fc = th.nn.Linear((out_feats + hid_feats) * 2, 4)
         self.device = device
 
     def forward(self, data):
@@ -137,11 +137,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
     log_file_path = kwargs['log_file_path']
     if datasetname == "PHEME":
         if version == 2:
-            model = Net(768, 64, 64, device).to(device)
+            model = BiGCN(768, 64, 64, device).to(device)
         else:
-            model = Net(256 * 768, 64, 64, device).to(device)
+            model = BiGCN(256 * 768, 64, 64, device).to(device)
     else:
-        model = Net(5000, 64, 64, device).to(device)
+        model = BiGCN(5000, 64, 64, device).to(device)
 
     BU_params = list(map(id, model.BUrumorGCN.conv1.parameters()))
     BU_params += list(map(id, model.BUrumorGCN.conv2.parameters()))
@@ -175,10 +175,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
                 # print(Batch_data, tweetid)
                 Batch_data.to(device)
                 if version == 2:  # Version 2
-                    new_x = Batch_data.x
-                    new_x = new_x.reshape(new_x.shape[0], -1, 768)
-                    new_x = new_x[:, 0]
-                    Batch_data.x = new_x
+                    # new_x = Batch_data.x
+                    # new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                    # new_x = new_x[:, 0]
+                    # Batch_data.x = new_x
+                    Batch_data.x = Batch_data.cls
                 out_labels = model(Batch_data)
                 finalloss = F.nll_loss(out_labels, Batch_data.y)
                 loss = finalloss
@@ -208,10 +209,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             for Batch_data, tweetid in tqdm_test_loader:
                 Batch_data.to(device)
                 if version == 2:  # Version 2
-                    new_x = Batch_data.x
-                    new_x = new_x.reshape(new_x.shape[0], -1, 768)
-                    new_x = new_x[:, 0]
-                    Batch_data.x = new_x
+                    # new_x = Batch_data.x
+                    # new_x = new_x.reshape(new_x.shape[0], -1, 768)
+                    # new_x = new_x[:, 0]
+                    # Batch_data.x = new_x
+                    Batch_data.x = Batch_data.cls
                 val_out = model(Batch_data)
                 val_loss = F.nll_loss(val_out, Batch_data.y)
                 temp_val_losses.append(val_loss.item())
@@ -262,7 +264,11 @@ def train_GCN(treeDic, x_test, x_train, TDdroprate, BUdroprate, lr, weight_decay
             F2 = np.mean(temp_val_F2)
             F3 = np.mean(temp_val_F3)
             F4 = np.mean(temp_val_F4)
-            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, f'BiGCNv{version}', datasetname,
+            if version == 2:
+                modelname = f'BiGCNv{version}'
+            else:
+                modelname = 'BiGCN'
+            early_stopping(np.mean(temp_val_losses), accs, F1, F2, F3, F4, model, modelname, datasetname,
                            checkpoint=checkpoint)
 
             if early_stopping.early_stop:
@@ -458,7 +464,8 @@ if __name__ == '__main__':
                                    datasetname,
                                    iter,
                                    fold=fold_num,
-                                   device=device, log_file_path=log_file_path)
+                                   device=device, log_file_path=log_file_path,
+                                   verson=2)
                 train_losses, val_losses, train_accs, val_accs, accs, F1, F2, F3, F4 = output
                 train_losses_dict[f'train_losses_{fold_num}'] = train_losses
                 val_losses_dict[f'val_losses_{fold_num}'] = val_losses
